@@ -6,6 +6,7 @@ package nl.mu.gui;
 
 import java.awt.Color;
 import java.awt.event.KeyEvent;
+import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
@@ -17,34 +18,60 @@ import javax.swing.text.StyledDocument;
  */
 public class MainFrame extends javax.swing.JFrame {
 
+    private Style userStyle;
+    private Style tildeStyle;
+    private String username;
+
     /**
      * Creates new form MainFrame
      */
     public MainFrame() {
         initComponents();
         getContentPane().setBackground(Color.BLACK);
-        outputPane.setText(
-                /*---*/"   ______ ___     ______ ______ ___     _   __ _  _____    ____   __  __ _   __ ______ ______ ____   _   __" + "\n"
-                /**/ + "  / ____//   |   / ____//_  __//   |   / | / /( )/ ___/   / __ \\ / / / // | / // ____// ____// __ \\ / | / /" + "\n"
-                /**/ + " / / __ / /| |  / __/    / /  / /| |  /  |/ / |/ \\__ \\   / / / // / / //  |/ // / __ / __/  / / / //  |/ / " + "\n"
-                /**/ + "/ /_/ // ___ | / /___   / /  / ___ | / /|  /    ___/ /  / /_/ // /_/ // /|  // /_/ // /___ / /_/ // /|  /  " + "\n"
-                /**/ + "\\____//_/  |_|/_____/  /_/  /_/  |_|/_/ |_/    /____/  /_____/ \\____//_/ |_/ \\____//_____/ \\____//_/ |_/   " + "\n"
-                /**/ + "By: Gaetan Doos");
-        Style userStyle=inputPane.addStyle("Green", null);
+        initOutputPane();
+        initInputPane();
+    }
+
+    public void initOutputPane() {
+        Style bannerStyle = outputPane.addStyle("Yellow", null);
+        StyleConstants.setForeground(bannerStyle, Color.YELLOW);
+        Style byLineStyle = outputPane.addStyle("Silver", null);
+        StyleConstants.setForeground(byLineStyle, new Color(192, 192, 192));
+        StyledDocument outputDoc = outputPane.getStyledDocument();
+        try {
+            outputDoc.insertString(outputDoc.getLength(),
+                    /*--*/ "   ______ ___     ______ ______ ___     _   __ _  _____    ____   __  __ _   __ ______ ______ ____   _   __" + "\n"
+                    /**/ + "  / ____//   |   / ____//_  __//   |   / | / /( )/ ___/   / __ \\ / / / // | / // ____// ____// __ \\ / | / /" + "\n"
+                    /**/ + " / / __ / /| |  / __/    / /  / /| |  /  |/ / |/ \\__ \\   / / / // / / //  |/ // / __ / __/  / / / //  |/ / " + "\n"
+                    /**/ + "/ /_/ // ___ | / /___   / /  / ___ | / /|  /    ___/ /  / /_/ // /_/ // /|  // /_/ // /___ / /_/ // /|  /  " + "\n"
+                    /**/ + "\\____//_/  |_|/_____/  /_/  /_/  |_|/_/ |_/    /____/  /_____/ \\____//_/ |_/ \\____//_____/ \\____//_/ |_/   " + "\n", bannerStyle);
+            outputDoc.insertString(outputDoc.getLength(), "By: Gaëtan Doos", byLineStyle);
+
+        } catch (BadLocationException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void initInputPaneStyle() {
+        userStyle = inputPane.addStyle("Green", null);
         StyleConstants.setForeground(userStyle, Color.GREEN);
-        Style tildeStyle=inputPane.addStyle("Blue", null);
-        StyleConstants.setForeground(tildeStyle, Color.BLUE);
-        StyledDocument inputDoc=inputPane.getStyledDocument();
-        try{
+        tildeStyle = inputPane.addStyle("Dodger Blue", null);
+        StyleConstants.setForeground(tildeStyle, new Color(30, 144, 255));
+    }
+
+    public void initInputPane() {
+        inputPane.requestFocusInWindow();
+        initInputPaneStyle();
+        StyledDocument inputDoc = inputPane.getStyledDocument();
+        try {
             inputDoc.insertString(inputDoc.getLength(), "admin@user", userStyle);
             inputDoc.insertString(inputDoc.getLength(), ":", null);
             inputDoc.insertString(inputDoc.getLength(), "~", tildeStyle);
             inputDoc.insertString(inputDoc.getLength(), "$ ", null);
-            
-        } catch (BadLocationException e){
+
+        } catch (BadLocationException e) {
             e.printStackTrace();
         }
-        
     }
 
     /**
@@ -78,6 +105,7 @@ public class MainFrame extends javax.swing.JFrame {
         outputPane.setBackground(new java.awt.Color(0, 0, 0));
         outputPane.setFont(new java.awt.Font("Courier New", 0, 12)); // NOI18N
         outputPane.setForeground(new java.awt.Color(255, 255, 255));
+        outputPane.setRequestFocusEnabled(false);
         jScrollPane1.setViewportView(outputPane);
 
         jScrollPane4.setBorder(null);
@@ -112,10 +140,24 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void inputPaneKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inputPaneKeyPressed
         // TODO add your handling code here:
-        if(evt.getKeyChar()==KeyEvent.VK_ENTER){
+        if (evt.getKeyChar() == KeyEvent.VK_ENTER) {
             evt.consume();
-            outputPane.setText(outputPane.getText()+"\n"+inputPane.getText());
-            inputPane.setText("");
+            StyledDocument inputDoc = inputPane.getStyledDocument();
+            StyledDocument ourputDoc = outputPane.getStyledDocument();
+
+            try {
+                int length = inputDoc.getLength();
+
+                ourputDoc.insertString(ourputDoc.getLength(), "\n" + "admin@" + username, userStyle);
+                ourputDoc.insertString(ourputDoc.getLength(), ":", null);
+                ourputDoc.insertString(ourputDoc.getLength(), "~", tildeStyle);
+                ourputDoc.insertString(ourputDoc.getLength(), "$ ", null);
+
+                inputPane.setText("");
+            } catch (BadLocationException e) {
+                e.printStackTrace();
+            }
+            initInputPane();
         }
     }//GEN-LAST:event_inputPaneKeyPressed
 
