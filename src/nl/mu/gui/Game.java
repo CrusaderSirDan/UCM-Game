@@ -42,25 +42,9 @@ public class Game {
             answer = scanner.nextLine();
         }
 
-        System.out.println("Hello " + username + "! \n" + "What year  were you born?");
-        int birthYear = -1;
-        while (birthYear < 0) {
-            try {
-                birthYear = scanner.nextInt();
-                if (birthYear < 0) {
-                    System.out.println("Please enter a valid year (positive integer)");
-                }
-            } catch(InputMismatchException e) {
-                System.out.println("Invalid input. Please enter a valid year.");
-                scanner.next();
-            }
-        }
-        System.out.println("You are " + calculateAge(birthYear) + " years old.");
-        // ----- Write your code above
+        System.out.println("Hello " + username + "! \n" + "Are you ready for an adventure? To START, type \"START\"");
+
     }
 
-    public static int calculateAge(int birthYear) {
-        int currentYear = Integer.parseInt("" + Year.now());
-        return currentYear - birthYear;
-    }
+    // ----- Write your code above
 }
