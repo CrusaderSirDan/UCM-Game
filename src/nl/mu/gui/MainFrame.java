@@ -9,12 +9,16 @@ import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.text.AttributeSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import javax.swing.JTextPane;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 import nl.mu.model.Chapter;
+import nl.mu.model.ChapterOne;
+import nl.mu.model.ChapterZero;
 import nl.mu.model.Game;
 import nl.mu.model.Player;
 
@@ -26,26 +30,51 @@ public class MainFrame extends javax.swing.JFrame {
 
     private Style userStyle;
     private Style tildeStyle;
-    private Player player=new Player("user");
-    private Game game=new Game();
+    private final Style errorStyle;
+    private Player player = new Player();
+    private Game game = new Game();
     private Chapter currentChapter;
-
+    private boolean userNamed = false;
     /**
      * Creates new form MainFrame
      */
     public MainFrame() {
         initComponents();
+        this.errorStyle = outputPane.addStyle("RED", null);
+        StyleConstants.setForeground(errorStyle, Color.RED);
         getContentPane().setBackground(Color.BLACK);
         initGame();
         initOutputPane();
         initInputPane();
+        currentChapter = new ChapterOne(player);
+        player.setUsername("CrusaderSirDan");
+        currentChapter.play(outputPane, inputPane);
     }
-    
-    public void initGame(){
+
+    public void initGame() {
         try {
             game.addChoices("ChoicesFile.txt");
         } catch (IOException ex) {
             Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public Chapter nextChapter() {
+        switch (currentChapter.getChapter()) {
+            case 0:
+                return new ChapterOne(player);
+            case 1:
+//                return new ChapterTwo(player);
+//            case 2:
+//                return "ChapterThree";
+//            case 3:
+//                return "ChapterFour";
+//            case 4:
+//                return "ChapterFive";
+//            case 5:
+//                return "ChapterSix";
+            default:
+                return null;
         }
     }
 
@@ -62,7 +91,7 @@ public class MainFrame extends javax.swing.JFrame {
                     /**/ + " / / __ / /| |  / __/    / /  / /| |  /  |/ / |/ \\__ \\   / / / // / / //  |/ // / __ / __/  / / / //  |/ / " + "\n"
                     /**/ + "/ /_/ // ___ | / /___   / /  / ___ | / /|  /    ___/ /  / /_/ // /_/ // /|  // /_/ // /___ / /_/ // /|  /  " + "\n"
                     /**/ + "\\____//_/  |_|/_____/  /_/  /_/  |_|/_/ |_/    /____/  /_____/ \\____//_/ |_/ \\____//_____/ \\____//_/ |_/   " + "\n", bannerStyle);
-            outputDoc.insertString(outputDoc.getLength(), "By: Gaëtan Doos", byLineStyle);
+            outputDoc.insertString(outputDoc.getLength(), "By: Gaëtan Doos\n", byLineStyle);
 
         } catch (BadLocationException e) {
             e.printStackTrace();
@@ -81,7 +110,11 @@ public class MainFrame extends javax.swing.JFrame {
         initInputPaneStyle();
         StyledDocument inputDoc = inputPane.getStyledDocument();
         try {
-            inputDoc.insertString(inputDoc.getLength(), "admin@user", userStyle);
+            if (player == null || player.getUsername() == null) {
+                inputDoc.insertString(inputDoc.getLength(), "admin@user", userStyle);
+            } else {
+                inputDoc.insertString(inputDoc.getLength(), "admin@" + player.getUsername(), userStyle);
+            }
             inputDoc.insertString(inputDoc.getLength(), ":", null);
             inputDoc.insertString(inputDoc.getLength(), "~", tildeStyle);
             inputDoc.insertString(inputDoc.getLength(), "$ ", null);
@@ -90,9 +123,41 @@ public class MainFrame extends javax.swing.JFrame {
             e.printStackTrace();
         }
     }
-    
-    public String getUserInput(){
-        return inputPane.getText().substring(10+player.getUsername().length());
+
+    public String getUserInput() {
+        String playerInput;
+        if (player == null || player.getUsername() == null) {
+            playerInput = inputPane.getText().substring(14);
+        } else {
+            playerInput = inputPane.getText().substring(10 + player.getUsername().length());
+        }
+        if (playerInput == null) {
+            playerInput = "";
+        }
+        return playerInput;
+    }
+
+    private void handleKeyEvent(KeyEvent evt, JTextPane pane, String nonInput) {
+        try {
+            int caretPosition = pane.getCaretPosition();
+            String currentText = pane.getText();
+
+            if (caretPosition <= nonInput.length()) {
+                // The caret is within the nonInput part, prevent modification
+                evt.consume();
+                return;
+            }
+
+            String regex = "^" + Pattern.quote(nonInput) + ".*";
+            Pattern p = Pattern.compile(regex);
+            Matcher m = p.matcher(currentText);
+
+            if (!m.matches()) {
+                evt.consume();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -121,12 +186,15 @@ public class MainFrame extends javax.swing.JFrame {
         setForeground(java.awt.Color.black);
 
         jScrollPane1.setBorder(null);
+        jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        jScrollPane1.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 
         outputPane.setEditable(false);
         outputPane.setBackground(new java.awt.Color(0, 0, 0));
         outputPane.setFont(new java.awt.Font("Courier New", 0, 12)); // NOI18N
         outputPane.setForeground(new java.awt.Color(255, 255, 255));
         outputPane.setToolTipText("");
+        outputPane.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         outputPane.setRequestFocusEnabled(false);
         jScrollPane1.setViewportView(outputPane);
 
@@ -152,7 +220,7 @@ public class MainFrame extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 722, Short.MAX_VALUE)
                 .addGap(0, 0, 0)
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -166,17 +234,29 @@ public class MainFrame extends javax.swing.JFrame {
             evt.consume();
             StyledDocument inputDoc = inputPane.getStyledDocument();
             StyledDocument outputDoc = outputPane.getStyledDocument();
+            String playerInput = getUserInput();
 
             try {
+                //update outputPane
                 int length = inputDoc.getLength();
-
-                outputDoc.insertString(outputDoc.getLength(), "\n" + "admin@" + player.getUsername(), userStyle);
+                if (player == null || player.getUsername() == null) {
+                    outputDoc.insertString(outputDoc.getLength(), "\n" + "admin@user", userStyle);
+                } else {
+                    outputDoc.insertString(outputDoc.getLength(), "\n" + "admin@" + player.getUsername(), userStyle);
+                }
                 outputDoc.insertString(outputDoc.getLength(), ":", null);
                 outputDoc.insertString(outputDoc.getLength(), "~", tildeStyle);
                 outputDoc.insertString(outputDoc.getLength(), "$ ", null);
-                outputDoc.insertString(outputDoc.getLength(), getUserInput(), null);
-                if(getUserInput().equals("test")){
-                    outputDoc.insertString(outputDoc.getLength(), "\n"+game.testCommand(), null);
+                outputDoc.insertString(outputDoc.getLength(), playerInput, null);
+
+                //check player choice
+                currentChapter.processChoice(playerInput, outputPane);
+                if ((currentChapter instanceof ChapterZero) && currentChapter.getChapterState() == 2) {
+                    player.setUsername(currentChapter.getPlayer().getUsername());
+                }
+                if (currentChapter.isChapterCompleted()) {
+                    currentChapter = nextChapter();
+                    currentChapter.play(outputPane, inputPane);
                 }
 
                 inputPane.setText("");
@@ -184,6 +264,15 @@ public class MainFrame extends javax.swing.JFrame {
                 e.printStackTrace();
             }
             initInputPane();
+        }
+        if (evt.getKeyChar() == KeyEvent.VK_BACK_SPACE || evt.getKeyChar() == KeyEvent.VK_DELETE) {
+            String nonInput;
+            if (player == null || player.getUsername() == null) {
+                nonInput = "admin@user:~$ ";
+            } else {
+                nonInput = "admin@" + player.getUsername() + ":~$";
+            }
+            handleKeyEvent(evt, inputPane, nonInput);
         }
     }//GEN-LAST:event_inputPaneKeyPressed
 

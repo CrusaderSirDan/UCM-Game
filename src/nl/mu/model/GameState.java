@@ -11,6 +11,10 @@ package nl.mu.model;
 public class GameState {
     private int currentChapter;
 
+    public GameState() {
+        this.currentChapter = 0;
+    }
+
     public int getCurrentChapter() {
         return currentChapter;
     }
