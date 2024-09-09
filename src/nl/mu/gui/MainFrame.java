@@ -6,11 +6,17 @@ package nl.mu.gui;
 
 import java.awt.Color;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
+import nl.mu.model.Chapter;
+import nl.mu.model.Game;
+import nl.mu.model.Player;
 
 /**
  *
@@ -20,7 +26,9 @@ public class MainFrame extends javax.swing.JFrame {
 
     private Style userStyle;
     private Style tildeStyle;
-    private String username;
+    private Player player=new Player("user");
+    private Game game=new Game();
+    private Chapter currentChapter;
 
     /**
      * Creates new form MainFrame
@@ -28,8 +36,17 @@ public class MainFrame extends javax.swing.JFrame {
     public MainFrame() {
         initComponents();
         getContentPane().setBackground(Color.BLACK);
+        initGame();
         initOutputPane();
         initInputPane();
+    }
+    
+    public void initGame(){
+        try {
+            game.addChoices("ChoicesFile.txt");
+        } catch (IOException ex) {
+            Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public void initOutputPane() {
@@ -73,6 +90,10 @@ public class MainFrame extends javax.swing.JFrame {
             e.printStackTrace();
         }
     }
+    
+    public String getUserInput(){
+        return inputPane.getText().substring(10+player.getUsername().length());
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -105,6 +126,7 @@ public class MainFrame extends javax.swing.JFrame {
         outputPane.setBackground(new java.awt.Color(0, 0, 0));
         outputPane.setFont(new java.awt.Font("Courier New", 0, 12)); // NOI18N
         outputPane.setForeground(new java.awt.Color(255, 255, 255));
+        outputPane.setToolTipText("");
         outputPane.setRequestFocusEnabled(false);
         jScrollPane1.setViewportView(outputPane);
 
@@ -124,14 +146,14 @@ public class MainFrame extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 762, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 847, Short.MAX_VALUE)
             .addComponent(jScrollPane4)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 396, Short.MAX_VALUE)
-                .addGap(4, 4, 4)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
+                .addGap(0, 0, 0)
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -143,15 +165,19 @@ public class MainFrame extends javax.swing.JFrame {
         if (evt.getKeyChar() == KeyEvent.VK_ENTER) {
             evt.consume();
             StyledDocument inputDoc = inputPane.getStyledDocument();
-            StyledDocument ourputDoc = outputPane.getStyledDocument();
+            StyledDocument outputDoc = outputPane.getStyledDocument();
 
             try {
                 int length = inputDoc.getLength();
 
-                ourputDoc.insertString(ourputDoc.getLength(), "\n" + "admin@" + username, userStyle);
-                ourputDoc.insertString(ourputDoc.getLength(), ":", null);
-                ourputDoc.insertString(ourputDoc.getLength(), "~", tildeStyle);
-                ourputDoc.insertString(ourputDoc.getLength(), "$ ", null);
+                outputDoc.insertString(outputDoc.getLength(), "\n" + "admin@" + player.getUsername(), userStyle);
+                outputDoc.insertString(outputDoc.getLength(), ":", null);
+                outputDoc.insertString(outputDoc.getLength(), "~", tildeStyle);
+                outputDoc.insertString(outputDoc.getLength(), "$ ", null);
+                outputDoc.insertString(outputDoc.getLength(), getUserInput(), null);
+                if(getUserInput().equals("test")){
+                    outputDoc.insertString(outputDoc.getLength(), "\n"+game.testCommand(), null);
+                }
 
                 inputPane.setText("");
             } catch (BadLocationException e) {

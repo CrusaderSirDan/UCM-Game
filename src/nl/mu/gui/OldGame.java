@@ -12,7 +12,7 @@ import java.util.Scanner;
  *
  * @author mcsyt
  */
-public class Game {
+public class OldGame {
 
     private static Scanner scanner;
 
