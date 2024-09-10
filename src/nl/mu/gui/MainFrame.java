@@ -195,7 +195,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         outputPane.setEditable(false);
         outputPane.setBackground(new java.awt.Color(0, 0, 0));
-        outputPane.setFont(new java.awt.Font("Courier New", 0, 12)); // NOI18N
+        outputPane.setFont(new java.awt.Font("Courier New", 0, 14)); // NOI18N
         outputPane.setForeground(new java.awt.Color(255, 255, 255));
         outputPane.setToolTipText("");
         outputPane.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -205,7 +205,7 @@ public class MainFrame extends javax.swing.JFrame {
         jScrollPane4.setBorder(null);
 
         inputPane.setBackground(new java.awt.Color(0, 0, 0));
-        inputPane.setFont(new java.awt.Font("Courier New", 0, 12)); // NOI18N
+        inputPane.setFont(new java.awt.Font("Courier New", 0, 14)); // NOI18N
         inputPane.setForeground(new java.awt.Color(255, 255, 255));
         inputPane.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -218,13 +218,15 @@ public class MainFrame extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 847, Short.MAX_VALUE)
             .addComponent(jScrollPane4)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 961, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 722, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 719, Short.MAX_VALUE)
                 .addGap(0, 0, 0)
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );

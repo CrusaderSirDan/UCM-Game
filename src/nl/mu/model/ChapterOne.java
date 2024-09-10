@@ -177,8 +177,8 @@ public class ChapterOne extends Chapter {
                                         + "It’s rough, but as you hold it up to the light, you see faint, almost invisible markings—symbols, "
                                         + "scribbled hastily. They seem familiar, but you can't place them. "
                                         + "There’s nothing else of note in the room.\n", narationStyle);
-                                outputDoc.insertString(outputDoc.getLength(), "\nCommands:\n   Open the door. (", null);
-                                outputDoc.insertString(outputDoc.getLength(), "OPEN DOOR", promptStyle);
+                                outputDoc.insertString(outputDoc.getLength(), "\nCommands:\n   Reopen the door. (", null);
+                                outputDoc.insertString(outputDoc.getLength(), "REOPEN DOOR", promptStyle);
                                 outputDoc.insertString(outputDoc.getLength(), ")", null);
                                 checkedRoom = true;
                             } else if (playerInput.equalsIgnoreCase("REOPEN DOOR")) {
@@ -236,7 +236,7 @@ public class ChapterOne extends Chapter {
                                 + "\nAs you move deeper, the corridor begins to shift. The stone beneath your feet feels uneven, "
                                 + "and the walls seem to close in slightly. In the distance, you hear a faint sound. It’s a slow, "
                                 + "rhythmic ticking, like the sound of a clock, though no such device is visible.", narationStyle);
-                        chapterCompleted=true;
+                        chapterCompleted = true;
                     } else if (playerInput.equalsIgnoreCase("TURN BACK")) {
                         outputDoc.insertString(outputDoc.getLength(), "\nYou hesitate at the entrance to the corridor, "
                                 + "feeling the weight of the decision to retreat. As you turn around, the dim light from the torch flickers ominously. "
@@ -259,17 +259,11 @@ public class ChapterOne extends Chapter {
                         cameBack = true;
                         chapterState--;
                     } else {
-                        outputDoc.insertString(outputDoc.getLength(), "\nCommands:\n   Reopen the door. (", null);
-                        outputDoc.insertString(outputDoc.getLength(), "REOPEN DOOR", promptStyle);
-                        if (checkedRoom) {
-                            outputDoc.insertString(outputDoc.getLength(), ")\n   Examine the room again. (", null);
-                            outputDoc.insertString(outputDoc.getLength(), "REEXAMINE ROOM", promptStyle);
-                            outputDoc.insertString(outputDoc.getLength(), ")", null);
-                        } else if (!checkedRoom) {
-                            outputDoc.insertString(outputDoc.getLength(), ")\n   Examine the room. (", null);
-                            outputDoc.insertString(outputDoc.getLength(), "EXAMINE ROOM", promptStyle);
-                            outputDoc.insertString(outputDoc.getLength(), ")", null);
-                        }
+                        outputDoc.insertString(outputDoc.getLength(), "\nCommands:\n   Follow the Corridor. (", null);
+                        outputDoc.insertString(outputDoc.getLength(), "FOLLOW CORRIDOR", promptStyle);
+                        outputDoc.insertString(outputDoc.getLength(), ")\n   Turn back. (", null);
+                        outputDoc.insertString(outputDoc.getLength(), "TURN BACK", promptStyle);
+                        outputDoc.insertString(outputDoc.getLength(), ")", null);
                     }
                     break;
                 default:
