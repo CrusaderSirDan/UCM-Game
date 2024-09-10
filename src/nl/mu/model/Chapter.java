@@ -15,16 +15,19 @@ import javax.swing.text.StyledDocument;
  * @author mcsyt
  */
 public abstract class Chapter {
+
     protected int chapter;
-    protected int chapterState=0;
+    protected int chapterState = 0;
     protected String chapterTitle;
     protected Player player;
-    protected boolean chapterCompleted=false;
+    protected boolean chapterCompleted = false;
+    protected boolean cameBack = false;
+    protected boolean checkedRoom = false;
 
     public Chapter(String chapterTitle, int chapter, Player player) {
         this.chapterTitle = chapterTitle;
-        this.chapter=chapter;
-        this.player=player;
+        this.chapter = chapter;
+        this.player = player;
     }
 
     public abstract void startChapter(JTextPane outputPane);
@@ -39,7 +42,7 @@ public abstract class Chapter {
     }
 
     public abstract void play(JTextPane outputPane, JTextPane inputPane);
-    
+
     public abstract void processChoice(String playerInput, JTextPane outputPane);
 
     public int getChapter() {

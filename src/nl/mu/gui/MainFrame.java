@@ -18,6 +18,7 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 import nl.mu.model.Chapter;
 import nl.mu.model.ChapterOne;
+import nl.mu.model.ChapterTwo;
 import nl.mu.model.ChapterZero;
 import nl.mu.model.Game;
 import nl.mu.model.Player;
@@ -35,6 +36,8 @@ public class MainFrame extends javax.swing.JFrame {
     private Game game = new Game();
     private Chapter currentChapter;
     private boolean userNamed = false;
+    private String lastInput = "";
+
     /**
      * Creates new form MainFrame
      */
@@ -46,8 +49,8 @@ public class MainFrame extends javax.swing.JFrame {
         initGame();
         initOutputPane();
         initInputPane();
-        currentChapter = new ChapterOne(player);
-        player.setUsername("CrusaderSirDan");
+        currentChapter = new ChapterZero();
+//        player.setUsername("CrusaderSirDan");
         currentChapter.play(outputPane, inputPane);
     }
 
@@ -64,8 +67,8 @@ public class MainFrame extends javax.swing.JFrame {
             case 0:
                 return new ChapterOne(player);
             case 1:
-//                return new ChapterTwo(player);
-//            case 2:
+                return new ChapterTwo(player);
+            case 2:
 //                return "ChapterThree";
 //            case 3:
 //                return "ChapterFour";
@@ -188,6 +191,7 @@ public class MainFrame extends javax.swing.JFrame {
         jScrollPane1.setBorder(null);
         jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         jScrollPane1.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+        jScrollPane1.setAutoscrolls(true);
 
         outputPane.setEditable(false);
         outputPane.setBackground(new java.awt.Color(0, 0, 0));
@@ -235,6 +239,7 @@ public class MainFrame extends javax.swing.JFrame {
             StyledDocument inputDoc = inputPane.getStyledDocument();
             StyledDocument outputDoc = outputPane.getStyledDocument();
             String playerInput = getUserInput();
+            lastInput = playerInput;
 
             try {
                 //update outputPane
@@ -264,8 +269,7 @@ public class MainFrame extends javax.swing.JFrame {
                 e.printStackTrace();
             }
             initInputPane();
-        }
-        if (evt.getKeyChar() == KeyEvent.VK_BACK_SPACE || evt.getKeyChar() == KeyEvent.VK_DELETE) {
+        } else if (evt.getKeyChar() == KeyEvent.VK_BACK_SPACE || evt.getKeyChar() == KeyEvent.VK_DELETE) {
             String nonInput;
             if (player == null || player.getUsername() == null) {
                 nonInput = "admin@user:~$ ";
@@ -273,6 +277,14 @@ public class MainFrame extends javax.swing.JFrame {
                 nonInput = "admin@" + player.getUsername() + ":~$";
             }
             handleKeyEvent(evt, inputPane, nonInput);
+        } else if (evt.getKeyCode() == KeyEvent.VK_UP) {
+            StyledDocument inputDoc = inputPane.getStyledDocument();
+            try {
+                inputDoc.insertString(inputDoc.getLength(), lastInput, null);
+            } catch (BadLocationException ex) {
+                Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
         }
     }//GEN-LAST:event_inputPaneKeyPressed
 
