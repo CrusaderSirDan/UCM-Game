@@ -12,20 +12,20 @@ import javax.swing.text.BadLocationException;
  * @author Doos
  */
 public class Player {
-    private String username;
+    private String name;
 
-    public String getUsername() {
-        return username;
+    public String getName() {
+        return name;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setName(String name) {
+        this.name = name;
     }
     
-    public void askUsername(JTextPane outputPane) {
+    public void askName(JTextPane outputPane) {
         try {
             outputPane.getStyledDocument().insertString(outputPane.getStyledDocument().getLength(),
-                    "\nWhat is your username?", null);
+                    "\nWhat is your name?", null);
         } catch (BadLocationException e) {
             e.printStackTrace();
         }

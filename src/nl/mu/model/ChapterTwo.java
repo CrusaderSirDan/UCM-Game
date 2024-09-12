@@ -46,14 +46,21 @@ public class ChapterTwo extends Chapter {
         StyleConstants.setForeground(bannerStyle, Color.YELLOW);
         Style narationStyle = outputPane.addStyle("NarationStyle", null);
         StyleConstants.setForeground(narationStyle, new Color(47, 79, 79));
+        Style promptStyle = outputPane.addStyle("prompt", null);
+        StyleConstants.setForeground(promptStyle, Color.YELLOW);
         //START CHAPTER
         try {
-            outputDoc.insertString(outputDoc.getLength(), "\n"+chapterTitle+"\n", bannerStyle);
-            outputDoc.insertString(outputDoc.getLength(), "The corridor stretches on, the shadows growing darker and the air heavier. "
+            outputDoc.insertString(outputDoc.getLength(), "\n" + chapterTitle + "\n", bannerStyle);
+            outputDoc.insertString(outputDoc.getLength(), "\nThe corridor stretches on, the shadows growing darker and the air heavier. "
                     + "The rhythmic ticking sound becomes more distinct, like a heartbeat echoing through the stone walls. "
                     + "You reach a junction where the corridor splits into two paths: one leading further into the darkness, "
-                    + "and the other illuminated by a faint, eerie glow.", narationStyle);
-            
+                    + "and the other illuminated by a faint, eerie glow.\n", narationStyle);
+            outputDoc.insertString(outputDoc.getLength(), "\nCommands:\n   Take the right path. (", null);
+            outputDoc.insertString(outputDoc.getLength(), "RIGHT", promptStyle);
+            outputDoc.insertString(outputDoc.getLength(), ")\n   Take the left path. (", null);
+            outputDoc.insertString(outputDoc.getLength(), "LEFT", promptStyle);
+            outputDoc.insertString(outputDoc.getLength(), ")", null);
+            chapterState++;
         } catch (BadLocationException ex) {
             Logger.getLogger(ChapterTwo.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -61,6 +68,46 @@ public class ChapterTwo extends Chapter {
 
     @Override
     public void processChoice(String playerInput, JTextPane outputPane) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        StyledDocument outputDoc = outputPane.getStyledDocument();
+        Style narationStyle = outputPane.addStyle("NarationStyle", null);
+        StyleConstants.setForeground(narationStyle, new Color(47, 79, 79));
+        Style promptStyle = outputPane.addStyle("prompt", null);
+        StyleConstants.setForeground(promptStyle, Color.YELLOW);
+        try {
+            switch (chapterState) {
+                case 1:
+                    if (playerInput.equalsIgnoreCase("RIGHT")) {
+                        outputDoc.insertString(outputDoc.getLength(), "\nYou choose the path illuminated by the eerie glow. The light grows stronger as you proceed, "
+                                + "revealing strange symbols etched into the walls. The symbols are similar to those on the cloth you found earlier, "
+                                + "but more intricate and glowing faintly. As you walk, you come across a small pedestal with an ancient, "
+                                + "dust-covered book resting on it.", narationStyle);
+                        outputDoc.insertString(outputDoc.getLength(), "\nCommands:\n   Examine the book. (", null);
+                        outputDoc.insertString(outputDoc.getLength(), "EXAMINE BOOK", promptStyle);
+                        outputDoc.insertString(outputDoc.getLength(), ")\n   Continue down the corridor. (", null);
+                        outputDoc.insertString(outputDoc.getLength(), "CONTINUE", promptStyle);
+                        outputDoc.insertString(outputDoc.getLength(), ")\n   Turn back. (", null);
+                        outputDoc.insertString(outputDoc.getLength(), "TURN BACK", promptStyle);
+                        outputDoc.insertString(outputDoc.getLength(), ")", null);
+                        chapterState++;
+                    } else if (playerInput.equalsIgnoreCase("LEFT")) {
+
+                        chapterState++;
+                    } else {
+                        outputDoc.insertString(outputDoc.getLength(), "\nCommands:\n   Take the right path. (", null);
+                        outputDoc.insertString(outputDoc.getLength(), "RIGHT", promptStyle);
+                        outputDoc.insertString(outputDoc.getLength(), ")\n   Take the left path. (", null);
+                        outputDoc.insertString(outputDoc.getLength(), "LEFT", promptStyle);
+                        outputDoc.insertString(outputDoc.getLength(), ")", null);
+                    }
+                    break;
+                case 2:
+                    
+                    break;
+                default:
+                    throw new AssertionError();
+            }
+        } catch (BadLocationException e) {
+            e.printStackTrace();
+        }
     }
 }

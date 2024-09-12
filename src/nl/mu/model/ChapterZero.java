@@ -28,7 +28,7 @@ public class ChapterZero extends Chapter {
 
     @Override
     public void play(JTextPane outputPane, JTextPane inputPane) {
-        player.askUsername(outputPane);
+        player.askName(outputPane);
         chapterState++;
     }
 
@@ -51,9 +51,9 @@ public class ChapterZero extends Chapter {
                     if (playerInput.equals("")) {
                         outputDoc.insertString(outputDoc.getLength(), "\n" + "PLEASE ENTER A VALID USERNAME", errorStyle);
                     } else {
-                        player.setUsername(playerInput);
+                        player.setName(playerInput);
                         outputDoc.insertString(outputDoc.getLength(), "\nYou typed ", null);
-                        outputDoc.insertString(outputDoc.getLength(), player.getUsername(), userStyle);
+                        outputDoc.insertString(outputDoc.getLength(), player.getName(), userStyle);
                         outputDoc.insertString(outputDoc.getLength(), ". ", null);
                         outputDoc.insertString(outputDoc.getLength(), "Confirm?", promptStyle);
                         outputDoc.insertString(outputDoc.getLength(), " (Y/n)", null);
@@ -63,7 +63,7 @@ public class ChapterZero extends Chapter {
                 case 2:
                     if (playerInput.equalsIgnoreCase("Y")) {
                         outputDoc.insertString(outputDoc.getLength(), "\nHello ", null);
-                        outputDoc.insertString(outputDoc.getLength(), player.getUsername(), userStyle);
+                        outputDoc.insertString(outputDoc.getLength(), player.getName(), userStyle);
                         outputDoc.insertString(outputDoc.getLength(), "! \n", null);
                         outputDoc.insertString(outputDoc.getLength(), "Are you ready for an adventure?", conversationalStyle);
                         outputDoc.insertString(outputDoc.getLength(), "  To START, type \"", null);
@@ -71,11 +71,11 @@ public class ChapterZero extends Chapter {
                         outputDoc.insertString(outputDoc.getLength(), "\"", null);
                         chapterState++;
                     } else if (playerInput.equalsIgnoreCase("n")) {
-                        player.askUsername(outputPane);
+                        player.askName(outputPane);
                         chapterState--;
                     } else {
                         outputDoc.insertString(outputDoc.getLength(), "\nYou typed ", null);
-                        outputDoc.insertString(outputDoc.getLength(), player.getUsername(), userStyle);
+                        outputDoc.insertString(outputDoc.getLength(), player.getName(), userStyle);
                         outputDoc.insertString(outputDoc.getLength(), ". ", null);
                         outputDoc.insertString(outputDoc.getLength(), "Confirm?", promptStyle);
                         outputDoc.insertString(outputDoc.getLength(), " (Y/n)", null);
@@ -86,7 +86,7 @@ public class ChapterZero extends Chapter {
                         chapterCompleted = true;
                     } else {
                         outputDoc.insertString(outputDoc.getLength(), "\nHello ", null);
-                        outputDoc.insertString(outputDoc.getLength(), player.getUsername(), userStyle);
+                        outputDoc.insertString(outputDoc.getLength(), player.getName(), userStyle);
                         outputDoc.insertString(outputDoc.getLength(), "! \n", null);
                         outputDoc.insertString(outputDoc.getLength(), "Are you ready for an adventure?", conversationalStyle);
                         outputDoc.insertString(outputDoc.getLength(), "  To START, type \"", null);

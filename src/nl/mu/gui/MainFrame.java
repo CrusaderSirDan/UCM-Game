@@ -46,11 +46,12 @@ public class MainFrame extends javax.swing.JFrame {
         this.errorStyle = outputPane.addStyle("RED", null);
         StyleConstants.setForeground(errorStyle, Color.RED);
         getContentPane().setBackground(Color.BLACK);
+        currentChapter = new ChapterZero();
+//        player.setName("CrusaderSirDan");
+//        currentChapter=new ChapterTwo(player);
         initGame();
         initOutputPane();
         initInputPane();
-        currentChapter = new ChapterZero();
-//        player.setUsername("CrusaderSirDan");
         currentChapter.play(outputPane, inputPane);
     }
 
@@ -113,10 +114,10 @@ public class MainFrame extends javax.swing.JFrame {
         initInputPaneStyle();
         StyledDocument inputDoc = inputPane.getStyledDocument();
         try {
-            if (player == null || player.getUsername() == null) {
+            if (player == null || player.getName() == null) {
                 inputDoc.insertString(inputDoc.getLength(), "admin@user", userStyle);
             } else {
-                inputDoc.insertString(inputDoc.getLength(), "admin@" + player.getUsername(), userStyle);
+                inputDoc.insertString(inputDoc.getLength(), "admin@" + player.getName(), userStyle);
             }
             inputDoc.insertString(inputDoc.getLength(), ":", null);
             inputDoc.insertString(inputDoc.getLength(), "~", tildeStyle);
@@ -129,10 +130,10 @@ public class MainFrame extends javax.swing.JFrame {
 
     public String getUserInput() {
         String playerInput;
-        if (player == null || player.getUsername() == null) {
+        if (player == null || player.getName() == null) {
             playerInput = inputPane.getText().substring(14);
         } else {
-            playerInput = inputPane.getText().substring(10 + player.getUsername().length());
+            playerInput = inputPane.getText().substring(10 + player.getName().length());
         }
         if (playerInput == null) {
             playerInput = "";
@@ -246,10 +247,10 @@ public class MainFrame extends javax.swing.JFrame {
             try {
                 //update outputPane
                 int length = inputDoc.getLength();
-                if (player == null || player.getUsername() == null) {
+                if (player == null || player.getName() == null) {
                     outputDoc.insertString(outputDoc.getLength(), "\n" + "admin@user", userStyle);
                 } else {
-                    outputDoc.insertString(outputDoc.getLength(), "\n" + "admin@" + player.getUsername(), userStyle);
+                    outputDoc.insertString(outputDoc.getLength(), "\n" + "admin@" + player.getName(), userStyle);
                 }
                 outputDoc.insertString(outputDoc.getLength(), ":", null);
                 outputDoc.insertString(outputDoc.getLength(), "~", tildeStyle);
@@ -259,7 +260,7 @@ public class MainFrame extends javax.swing.JFrame {
                 //check player choice
                 currentChapter.processChoice(playerInput, outputPane);
                 if ((currentChapter instanceof ChapterZero) && currentChapter.getChapterState() == 2) {
-                    player.setUsername(currentChapter.getPlayer().getUsername());
+                    player.setName(currentChapter.getPlayer().getName());
                 }
                 if (currentChapter.isChapterCompleted()) {
                     currentChapter = nextChapter();
@@ -273,10 +274,10 @@ public class MainFrame extends javax.swing.JFrame {
             initInputPane();
         } else if (evt.getKeyChar() == KeyEvent.VK_BACK_SPACE || evt.getKeyChar() == KeyEvent.VK_DELETE) {
             String nonInput;
-            if (player == null || player.getUsername() == null) {
+            if (player == null || player.getName() == null) {
                 nonInput = "admin@user:~$ ";
             } else {
-                nonInput = "admin@" + player.getUsername() + ":~$";
+                nonInput = "admin@" + player.getName() + ":~$ ";
             }
             handleKeyEvent(evt, inputPane, nonInput);
         } else if (evt.getKeyCode() == KeyEvent.VK_UP) {
