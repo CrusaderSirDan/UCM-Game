@@ -19,7 +19,7 @@ import javax.swing.text.StyledDocument;
  */
 public class ChapterTwo extends Chapter {
 
-    public ChapterTwo(Player player) {
+    public ChapterTwo(Player player, JTextPane outputPane) {
         super(/**/"   ______ __                   __                 ___                                                 \n"
                 + "  / ____// /_   ____ _ ____   / /_ ___   _____   |__ \\  _                                             \n"
                 + " / /    / __ \\ / __ `// __ \\ / __// _ \\ / ___/   __/ / (_)                                            \n"
@@ -30,7 +30,7 @@ public class ChapterTwo extends Chapter {
                 + "         / /  / __ \\ / _ \\   / __/  / ___// __ \\ / __ \\ / ___/  / __ \\ / /_   / __// // __ `__ \\ / _ \\\n"
                 + "        / /  / / / //  __/  / /___ / /__ / / / // /_/ /(__  )  / /_/ // __/  / /_ / // / / / / //  __/\n"
                 + "       /_/  /_/ /_/ \\___/  /_____/ \\___//_/ /_/ \\____//____/   \\____//_/     \\__//_//_/ /_/ /_/ \\___/ \n"
-                + "                                                                                                      ", 2, player);
+                + "                                                                                                      ", 2, player, outputPane);
     }
 
     @Override
@@ -39,7 +39,7 @@ public class ChapterTwo extends Chapter {
     }
 
     @Override
-    public void play(JTextPane outputPane, JTextPane inputPane) {
+    public void play(JTextPane outputPane) {
         //CREATE THE STYLES
         StyledDocument outputDoc = outputPane.getStyledDocument();
         Style bannerStyle = outputPane.addStyle("Yellow", null);

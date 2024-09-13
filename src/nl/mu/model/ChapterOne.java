@@ -19,7 +19,7 @@ import javax.swing.text.StyledDocument;
  */
 public class ChapterOne extends Chapter {
 
-    public ChapterOne(Player player) {
+    public ChapterOne(Player player, JTextPane outputPane) {
         super(/**/"   ______ __                   __                 ___                                   \n"
                 + "  / ____// /_   ____ _ ____   / /_ ___   _____   <  /_                                  \n"
                 + " / /    / __ \\ / __ `// __ \\ / __// _ \\ / ___/   / /(_)                                 \n"
@@ -30,7 +30,7 @@ public class ChapterOne extends Chapter {
                 + "         / /  / __ \\ / _ \\   / /| || | /| / // __ `// //_// _ \\ / __ \\ / // __ \\ / __ `/\n"
                 + "        / /  / / / //  __/  / ___ || |/ |/ // /_/ // ,<  /  __// / / // // / / // /_/ / \n"
                 + "       /_/  /_/ /_/ \\___/  /_/  |_||__/|__/ \\__,_//_/|_| \\___//_/ /_//_//_/ /_/ \\__, /  \n"
-                + "                                                                               /____/   ", 1, player);
+                + "                                                                               /____/   ", 1, player, outputPane);
     }
 
     public void startChapter(JTextPane outputPane) {
@@ -38,11 +38,9 @@ public class ChapterOne extends Chapter {
     }
 
     @Override
-    public void play(JTextPane outputPane, JTextPane inputPane) {
+    public void play(JTextPane outputPane) {
         //CREATE THE STYLES
         StyledDocument outputDoc = outputPane.getStyledDocument();
-        Style bannerStyle = outputPane.addStyle("Yellow", null);
-        StyleConstants.setForeground(bannerStyle, Color.YELLOW);
         Style descriptionStyle = outputPane.addStyle("DescriptionStyle", null);
         StyleConstants.setForeground(descriptionStyle, new Color(70, 70, 70));
         StyleConstants.setItalic(descriptionStyle, true);
@@ -57,37 +55,32 @@ public class ChapterOne extends Chapter {
         Style promptStyle = outputPane.addStyle("prompt", null);
         StyleConstants.setForeground(promptStyle, Color.YELLOW);
         //START CHAPTER
-        try {
-            outputDoc.insertString(outputDoc.getLength(), "\n" + chapterTitle + "\n", bannerStyle);
-            outputDoc.insertString(outputDoc.getLength(), "\nDarkness surrounds you. "
-                    + "The air is cold, damp, and heavy with the scent of stone and moss. "
-                    + "You feel the hard ground beneath you, rough and unforgiving, "
-                    + "as if the earth itself rejects your presence.\n", descriptionStyle);
-            outputDoc.insertString(outputDoc.getLength(), "\nWhere am I?\n", questionsStyle);
-            outputDoc.insertString(outputDoc.getLength(), "\nThe thought echoes in your mind as you open your eyes, "
-                    + "though the darkness offers no comfort, no answers. "
-                    + "A faint dripping sound is the only noise that breaks the silence, "
-                    + "a slow rhythmic tap that matches the beating of your heart.\n", narationStyle);
-            outputDoc.insertString(outputDoc.getLength(), "\nYou push yourself upright, your limbs sluggish as if you've been asleep for too long. "
-                    + "Blinking into the blackness, your vision slowly adjusts. Dim light flickers from a torch, "
-                    + "casting weak shadows on the walls of a narrow stone room. The walls are damp, covered in uneven patches of moss, "
-                    + "and the floor is cold beneath your hands\n", narationStyle);
-            outputDoc.insertString(outputDoc.getLength(), "\nWho am I?\n", questionsStyle);
-            outputDoc.insertString(outputDoc.getLength(), "\nYour mind is blank. No memories, no identity. Just a sense of loss, of being ", narationStyle);
-            outputDoc.insertString(outputDoc.getLength(), "stuck", italicNarationStyle);
-            outputDoc.insertString(outputDoc.getLength(), ".\n\nA rusty iron door stands before you. It creaks softly, "
-                    + "moving slightly as though inviting you to leave, "
-                    + "but also warning you that what lies beyond may not be what you hope for. There are no windows, no exits except for the door, "
-                    + "and the flickering light grows dimmer with each passing moment.\n", narationStyle);
-            outputDoc.insertString(outputDoc.getLength(), "\nCommands:\n   Examine the room. (", null);
-            outputDoc.insertString(outputDoc.getLength(), "EXAMINE ROOM", promptStyle);
-            outputDoc.insertString(outputDoc.getLength(), ")\n   Open the door. (", null);
-            outputDoc.insertString(outputDoc.getLength(), "OPEN DOOR", promptStyle);
-            outputDoc.insertString(outputDoc.getLength(), ")", null);
-            chapterState++;
-        } catch (BadLocationException ex) {
-            Logger.getLogger(ChapterOne.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        displayTextLetterByLetter("\nDarkness surrounds you. "
+                + "The air is cold, damp, and heavy with the scent of stone and moss. "
+                + "You feel the hard ground beneath you, rough and unforgiving, "
+                + "as if the earth itself rejects your presence.\n", descriptionStyle, outputPane);
+        displayTextLetterByLetter("\nWhere am I?\n", questionsStyle, outputPane);
+        displayTextLetterByLetter("\nThe thought echoes in your mind as you open your eyes, "
+                + "though the darkness offers no comfort, no answers. "
+                + "A faint dripping sound is the only noise that breaks the silence, "
+                + "a slow rhythmic tap that matches the beating of your heart.\n", narationStyle, outputPane);
+        displayTextLetterByLetter("\nYou push yourself upright, your limbs sluggish as if you've been asleep for too long. "
+                + "Blinking into the blackness, your vision slowly adjusts. Dim light flickers from a torch, "
+                + "casting weak shadows on the walls of a narrow stone room. The walls are damp, covered in uneven patches of moss, "
+                + "and the floor is cold beneath your hands\n", narationStyle, outputPane);
+        displayTextLetterByLetter("\nWho am I?\n", questionsStyle, outputPane);
+        displayTextLetterByLetter("\nYour mind is blank. No memories, no identity. Just a sense of loss, of being ", narationStyle, outputPane);
+        displayTextLetterByLetter("stuck", italicNarationStyle, outputPane);
+        displayTextLetterByLetter(".\n\nA rusty iron door stands before you. It creaks softly, "
+                + "moving slightly as though inviting you to leave, "
+                + "but also warning you that what lies beyond may not be what you hope for. There are no windows, no exits except for the door, "
+                + "and the flickering light grows dimmer with each passing moment.\n", narationStyle, outputPane);
+        displayTextLetterByLetter("\nCommands:\n   Examine the room. (", null, outputPane);
+        displayTextLetterByLetter("EXAMINE ROOM", promptStyle, outputPane);
+        displayTextLetterByLetter(")\n   Open the door. (", null, outputPane);
+        displayTextLetterByLetter("OPEN DOOR", promptStyle, outputPane);
+        displayTextLetterByLetter(")", null, outputPane);
+        chapterState++;
     }
 
     @Override
@@ -120,157 +113,151 @@ public class ChapterOne extends Chapter {
         StyleConstants.setForeground(dungeonStyle, new Color(173, 216, 230));
         StyleConstants.setItalic(dungeonStyle, true);
         //LIST THE CHOICES
-        try {
-            switch (chapterState) {
-                case 1:
-                    if (!cameBack) {
+        switch (chapterState) {
+            case 1:
+                if (!cameBack) {
+                    if (playerInput.equalsIgnoreCase("EXAMINE ROOM")) {
+                        displayTextLetterByLetter("\nYou glance around the small stone chamber. "
+                                + "The walls are bare, except for the patches of moss that cling to the stone like unwelcome guests. "
+                                + "In the far corner, you notice a small object, half-hidden in shadow. It's a scrap of cloth, torn and dirty, "
+                                + "but there is something strange about it.\n", narationStyle, outputPane);
+                        displayTextLetterByLetter("\nPick up the cloth\n", questionsStyle, outputPane);
+                        displayTextLetterByLetter("\nYou reach down and feel the fabric between your fingers. "
+                                + "It’s rough, but as you hold it up to the light, you see faint, almost invisible markings—symbols, "
+                                + "scribbled hastily. They seem familiar, but you can't place them. "
+                                + "There’s nothing else of note in the room.\n", narationStyle, outputPane);
+                        displayTextLetterByLetter("\nCommands:\n   Open the door. (", null, outputPane);
+                        displayTextLetterByLetter("OPEN DOOR", promptStyle, outputPane);
+                        displayTextLetterByLetter(")", null, outputPane);
+                        checkedRoom = true;
+                    } else if (playerInput.equalsIgnoreCase("OPEN DOOR")) {
+                        displayTextLetterByLetter("\nYou stand before the iron door, its surface pitted with rust and decay. "
+                                + "As you reach for the handle, you hesitate. Something about the air beyond the door feels… different. "
+                                + "A sense of unease washes over you, but there’s no other way forward. The room behind you offers no solace.\n"
+                                + "\nYou pull the door open slowly, the hinges groaning in protest. "
+                                + "Beyond the threshold, a long, narrow corridor stretches into the shadows, lit only by the occasional flickering torch. "
+                                + "The walls here are even more worn, as though time itself has been slowly eroding them. "
+                                + "The air feels heavier here.\n", narationStyle, outputPane);
+                        displayTextLetterByLetter("\nAs you step into the corridor, "
+                                + "a voice echoes faintly from deep within the dungeon.\n", boldNarationStyle, outputPane);
+                        displayTextLetterByLetter("\n\"You are not the first...\"\n", dungeonStyle, outputPane);
+                        displayTextLetterByLetter("\nIt’s barely a whisper, too faint to be certain if it’s real or just your imagination, "
+                                + "but the words linger in your mind. They leave a sense of urgency, but also a strange comfort, "
+                                + "as if someone, somewhere, knows what you are going through.", narationStyle, outputPane);
+                        displayTextLetterByLetter("\nCommands:\n   Follow the corridor. (", null, outputPane);
+                        displayTextLetterByLetter("FOLLOW CORRIDOR", promptStyle, outputPane);
+                        displayTextLetterByLetter(")\n   Turn back. (", null, outputPane);
+                        displayTextLetterByLetter("TURN BACK", promptStyle, outputPane);
+                        displayTextLetterByLetter(")", null, outputPane);
+                        chapterState++;
+                    } else {
+                        displayTextLetterByLetter("\nCommands:\n   Examine the room. (", null, outputPane);
+                        displayTextLetterByLetter("EXAMINE ROOM", promptStyle, outputPane);
+                        displayTextLetterByLetter(")\n   Open the door. (", null, outputPane);
+                        displayTextLetterByLetter("OPEN DOOR", promptStyle, outputPane);
+                        displayTextLetterByLetter(")", null, outputPane);
+                    }
+                } else if (cameBack) {
+                    if (!checkedRoom) {
                         if (playerInput.equalsIgnoreCase("EXAMINE ROOM")) {
-                            outputDoc.insertString(outputDoc.getLength(), "\nYou glance around the small stone chamber. "
+                            displayTextLetterByLetter("\nYou glance around the small stone chamber. "
                                     + "The walls are bare, except for the patches of moss that cling to the stone like unwelcome guests. "
                                     + "In the far corner, you notice a small object, half-hidden in shadow. It's a scrap of cloth, torn and dirty, "
-                                    + "but there is something strange about it.\n", narationStyle);
-                            outputDoc.insertString(outputDoc.getLength(), "\nPick up the cloth\n", questionsStyle);
-                            outputDoc.insertString(outputDoc.getLength(), "\nYou reach down and feel the fabric between your fingers. "
+                                    + "but there is something strange about it.\n", narationStyle, outputPane);
+                            displayTextLetterByLetter("\nPick up the cloth\n", questionsStyle, outputPane);
+                            displayTextLetterByLetter("\nYou reach down and feel the fabric between your fingers. "
                                     + "It’s rough, but as you hold it up to the light, you see faint, almost invisible markings—symbols, "
                                     + "scribbled hastily. They seem familiar, but you can't place them. "
-                                    + "There’s nothing else of note in the room.\n", narationStyle);
-                            outputDoc.insertString(outputDoc.getLength(), "\nCommands:\n   Open the door. (", null);
-                            outputDoc.insertString(outputDoc.getLength(), "OPEN DOOR", promptStyle);
-                            outputDoc.insertString(outputDoc.getLength(), ")", null);
+                                    + "There’s nothing else of note in the room.\n", narationStyle, outputPane);
+                            displayTextLetterByLetter("\nCommands:\n   Reopen the door. (", null, outputPane);
+                            displayTextLetterByLetter("REOPEN DOOR", promptStyle, outputPane);
+                            displayTextLetterByLetter(")", null, outputPane);
                             checkedRoom = true;
-                        } else if (playerInput.equalsIgnoreCase("OPEN DOOR")) {
-                            outputDoc.insertString(outputDoc.getLength(), "\nYou stand before the iron door, its surface pitted with rust and decay. "
-                                    + "As you reach for the handle, you hesitate. Something about the air beyond the door feels… different. "
-                                    + "A sense of unease washes over you, but there’s no other way forward. The room behind you offers no solace.\n"
-                                    + "\nYou pull the door open slowly, the hinges groaning in protest. "
-                                    + "Beyond the threshold, a long, narrow corridor stretches into the shadows, lit only by the occasional flickering torch. "
-                                    + "The walls here are even more worn, as though time itself has been slowly eroding them. "
-                                    + "The air feels heavier here.\n", narationStyle);
-                            outputDoc.insertString(outputDoc.getLength(), "\nAs you step into the corridor, "
-                                    + "a voice echoes faintly from deep within the dungeon.\n", boldNarationStyle);
-                            outputDoc.insertString(outputDoc.getLength(), "\n\"You are not the first...\"\n", dungeonStyle);
-                            outputDoc.insertString(outputDoc.getLength(), "\nIt’s barely a whisper, too faint to be certain if it’s real or just your imagination, "
-                                    + "but the words linger in your mind. They leave a sense of urgency, but also a strange comfort, "
-                                    + "as if someone, somewhere, knows what you are going through.", narationStyle);
-                            outputDoc.insertString(outputDoc.getLength(), "\nCommands:\n   Follow the corridor. (", null);
-                            outputDoc.insertString(outputDoc.getLength(), "FOLLOW CORRIDOR", promptStyle);
-                            outputDoc.insertString(outputDoc.getLength(), ")\n   Turn back. (", null);
-                            outputDoc.insertString(outputDoc.getLength(), "TURN BACK", promptStyle);
-                            outputDoc.insertString(outputDoc.getLength(), ")", null);
+                        } else if (playerInput.equalsIgnoreCase("REOPEN DOOR")) {
+                            displayTextLetterByLetter("\nYou carefully open the door once more. "
+                                    + "The corridor stretches out before you, just as you left it, "
+                                    + "with the same eerie glow and rhythmic ticking echoing in the distance.", narationStyle, outputPane);
+                            displayTextLetterByLetter("\nCommands:\n   Follow the corridor. (", null, outputPane);
+                            displayTextLetterByLetter("FOLLOW CORRIDOR", promptStyle, outputPane);
+                            displayTextLetterByLetter(")\n   Turn back. (", null, outputPane);
+                            displayTextLetterByLetter("TURN BACK", promptStyle, outputPane);
+                            displayTextLetterByLetter(")", null, outputPane);
                             chapterState++;
                         } else {
-                            outputDoc.insertString(outputDoc.getLength(), "\nCommands:\n   Examine the room. (", null);
-                            outputDoc.insertString(outputDoc.getLength(), "EXAMINE ROOM", promptStyle);
-                            outputDoc.insertString(outputDoc.getLength(), ")\n   Open the door. (", null);
-                            outputDoc.insertString(outputDoc.getLength(), "OPEN DOOR", promptStyle);
-                            outputDoc.insertString(outputDoc.getLength(), ")", null);
+                            displayTextLetterByLetter("\nCommands:\n   Examine the room. (", null, outputPane);
+                            displayTextLetterByLetter("EXAMINE ROOM", promptStyle, outputPane);
+                            displayTextLetterByLetter(")\n   Reopen the door. (", null, outputPane);
+                            displayTextLetterByLetter("REOPEN DOOR", promptStyle, outputPane);
+                            displayTextLetterByLetter(")", null, outputPane);
                         }
-                    } else if (cameBack) {
-                        if (!checkedRoom) {
-                            if (playerInput.equalsIgnoreCase("EXAMINE ROOM")) {
-                                outputDoc.insertString(outputDoc.getLength(), "\nYou glance around the small stone chamber. "
-                                        + "The walls are bare, except for the patches of moss that cling to the stone like unwelcome guests. "
-                                        + "In the far corner, you notice a small object, half-hidden in shadow. It's a scrap of cloth, torn and dirty, "
-                                        + "but there is something strange about it.\n", narationStyle);
-                                outputDoc.insertString(outputDoc.getLength(), "\nPick up the cloth\n", questionsStyle);
-                                outputDoc.insertString(outputDoc.getLength(), "\nYou reach down and feel the fabric between your fingers. "
-                                        + "It’s rough, but as you hold it up to the light, you see faint, almost invisible markings—symbols, "
-                                        + "scribbled hastily. They seem familiar, but you can't place them. "
-                                        + "There’s nothing else of note in the room.\n", narationStyle);
-                                outputDoc.insertString(outputDoc.getLength(), "\nCommands:\n   Reopen the door. (", null);
-                                outputDoc.insertString(outputDoc.getLength(), "REOPEN DOOR", promptStyle);
-                                outputDoc.insertString(outputDoc.getLength(), ")", null);
-                                checkedRoom = true;
-                            } else if (playerInput.equalsIgnoreCase("REOPEN DOOR")) {
-                                outputDoc.insertString(outputDoc.getLength(), "\nYou carefully open the door once more. "
-                                        + "The corridor stretches out before you, just as you left it, "
-                                        + "with the same eerie glow and rhythmic ticking echoing in the distance.", narationStyle);
-                                outputDoc.insertString(outputDoc.getLength(), "\nCommands:\n   Follow the corridor. (", null);
-                                outputDoc.insertString(outputDoc.getLength(), "FOLLOW CORRIDOR", promptStyle);
-                                outputDoc.insertString(outputDoc.getLength(), ")\n   Turn back. (", null);
-                                outputDoc.insertString(outputDoc.getLength(), "TURN BACK", promptStyle);
-                                outputDoc.insertString(outputDoc.getLength(), ")", null);
-                                chapterState++;
-                            } else {
-                                outputDoc.insertString(outputDoc.getLength(), "\nCommands:\n   Examine the room. (", null);
-                                outputDoc.insertString(outputDoc.getLength(), "EXAMINE ROOM", promptStyle);
-                                outputDoc.insertString(outputDoc.getLength(), ")\n   Reopen the door. (", null);
-                                outputDoc.insertString(outputDoc.getLength(), "REOPEN DOOR", promptStyle);
-                                outputDoc.insertString(outputDoc.getLength(), ")", null);
-                            }
-                        } else if (checkedRoom) {
-                            if (playerInput.equalsIgnoreCase("REEXAMINE ROOM")) {
-                                outputDoc.insertString(outputDoc.getLength(), "\nYou take another look around the room. "
-                                        + "The stone walls and dim light seem unchanged, but you notice new details or "
-                                        + "subtle differences that might have been missed before.", narationStyle);
-                                outputDoc.insertString(outputDoc.getLength(), "\nCommands:\n   Reopen the door. (", null);
-                                outputDoc.insertString(outputDoc.getLength(), "REOPEN DOOR", promptStyle);
-                                outputDoc.insertString(outputDoc.getLength(), ")", null);
-                            } else if (playerInput.equalsIgnoreCase("REOPEN DOOR")) {
-                                outputDoc.insertString(outputDoc.getLength(), "\nYou carefully open the door once more. "
-                                        + "The corridor stretches out before you, just as you left it, "
-                                        + "with the same eerie glow and rhythmic ticking echoing in the distance.", narationStyle);
-                                outputDoc.insertString(outputDoc.getLength(), "\nCommands:\n   Follow the corridor. (", null);
-                                outputDoc.insertString(outputDoc.getLength(), "FOLLOW CORRIDOR", promptStyle);
-                                outputDoc.insertString(outputDoc.getLength(), ")\n   Turn back. (", null);
-                                outputDoc.insertString(outputDoc.getLength(), "TURN BACK", promptStyle);
-                                outputDoc.insertString(outputDoc.getLength(), ")", null);
-                                chapterState++;
-                            } else {
-                                outputDoc.insertString(outputDoc.getLength(), "\nCommands:\n   Reexamine the room. (", null);
-                                outputDoc.insertString(outputDoc.getLength(), "REEXAMINE ROOM", promptStyle);
-                                outputDoc.insertString(outputDoc.getLength(), ")\n   Reopen the door. (", null);
-                                outputDoc.insertString(outputDoc.getLength(), "REOPEN DOOR", promptStyle);
-                                outputDoc.insertString(outputDoc.getLength(), ")", null);
-                            }
+                    } else if (checkedRoom) {
+                        if (playerInput.equalsIgnoreCase("REEXAMINE ROOM")) {
+                            displayTextLetterByLetter("\nYou take another look around the room. "
+                                    + "The stone walls and dim light seem unchanged, but you notice new details or "
+                                    + "subtle differences that might have been missed before.", narationStyle, outputPane);
+                            displayTextLetterByLetter("\nCommands:\n   Reopen the door. (", null, outputPane);
+                            displayTextLetterByLetter("REOPEN DOOR", promptStyle, outputPane);
+                            displayTextLetterByLetter(")", null, outputPane);
+                        } else if (playerInput.equalsIgnoreCase("REOPEN DOOR")) {
+                            displayTextLetterByLetter("\nYou carefully open the door once more. "
+                                    + "The corridor stretches out before you, just as you left it, "
+                                    + "with the same eerie glow and rhythmic ticking echoing in the distance.", narationStyle, outputPane);
+                            displayTextLetterByLetter("\nCommands:\n   Follow the corridor. (", null, outputPane);
+                            displayTextLetterByLetter("FOLLOW CORRIDOR", promptStyle, outputPane);
+                            displayTextLetterByLetter(")\n   Turn back. (", null, outputPane);
+                            displayTextLetterByLetter("TURN BACK", promptStyle, outputPane);
+                            displayTextLetterByLetter(")", null, outputPane);
+                            chapterState++;
+                        } else {
+                            displayTextLetterByLetter("\nCommands:\n   Reexamine the room. (", null, outputPane);
+                            displayTextLetterByLetter("REEXAMINE ROOM", promptStyle, outputPane);
+                            displayTextLetterByLetter(")\n   Reopen the door. (", null, outputPane);
+                            displayTextLetterByLetter("REOPEN DOOR", promptStyle, outputPane);
+                            displayTextLetterByLetter(")", null, outputPane);
                         }
-                        cameBack = false;
                     }
-                    break;
-
-                case 2:
-                    if (playerInput.equalsIgnoreCase("FOLLOW CORRIDOR")) {
-                        outputDoc.insertString(outputDoc.getLength(), "\nYou press forward, the light from the torches casting faint shadows"
-                                + " along the rough-hewn walls. The sound of your footsteps is swallowed by the silence, "
-                                + "yet the presence of something—or someone—seems to linger just beyond the reach of your senses.\n"
-                                + "\nAs you move deeper, the corridor begins to shift. The stone beneath your feet feels uneven, "
-                                + "and the walls seem to close in slightly. In the distance, you hear a faint sound. It’s a slow, "
-                                + "rhythmic ticking, like the sound of a clock, though no such device is visible.", narationStyle);
-                        chapterCompleted = true;
-                    } else if (playerInput.equalsIgnoreCase("TURN BACK")) {
-                        outputDoc.insertString(outputDoc.getLength(), "\nYou hesitate at the entrance to the corridor, "
-                                + "feeling the weight of the decision to retreat. As you turn around, the dim light from the torch flickers ominously. "
-                                + "The small stone chamber behind you looks unchanged, but a shiver runs down your spine as you sense that the darkness "
-                                + "beyond the door is no longer as inviting as it seemed.\n\nThe iron door creaks softly as you close it behind you, "
-                                + "and you feel an unsettling quiet settle over the room. The rhythmic dripping of water is now the only sound, "
-                                + "echoing off the cold stone walls. It feels as though the dungeon itself is waiting for you to reconsider, "
-                                + "a silent pressure urging you to explore further.", narationStyle);
-                        outputDoc.insertString(outputDoc.getLength(), "\nCommands:\n   Reopen the door. (", null);
-                        outputDoc.insertString(outputDoc.getLength(), "REOPEN DOOR", promptStyle);
-                        if (checkedRoom) {
-                            outputDoc.insertString(outputDoc.getLength(), ")\n   Examine the room again. (", null);
-                            outputDoc.insertString(outputDoc.getLength(), "REEXAMINE ROOM", promptStyle);
-                            outputDoc.insertString(outputDoc.getLength(), ")", null);
-                        } else if (!checkedRoom) {
-                            outputDoc.insertString(outputDoc.getLength(), ")\n   Examine the room. (", null);
-                            outputDoc.insertString(outputDoc.getLength(), "EXAMINE ROOM", promptStyle);
-                            outputDoc.insertString(outputDoc.getLength(), ")", null);
-                        }
-                        cameBack = true;
-                        chapterState--;
-                    } else {
-                        outputDoc.insertString(outputDoc.getLength(), "\nCommands:\n   Follow the Corridor. (", null);
-                        outputDoc.insertString(outputDoc.getLength(), "FOLLOW CORRIDOR", promptStyle);
-                        outputDoc.insertString(outputDoc.getLength(), ")\n   Turn back. (", null);
-                        outputDoc.insertString(outputDoc.getLength(), "TURN BACK", promptStyle);
-                        outputDoc.insertString(outputDoc.getLength(), ")", null);
+                }
+                break;
+            case 2:
+                if (playerInput.equalsIgnoreCase("FOLLOW CORRIDOR")) {
+                    displayTextLetterByLetter("\nYou press forward, the light from the torches casting faint shadows"
+                            + " along the rough-hewn walls. The sound of your footsteps is swallowed by the silence, "
+                            + "yet the presence of something—or someone—seems to linger just beyond the reach of your senses.\n"
+                            + "\nAs you move deeper, the corridor begins to shift. The stone beneath your feet feels uneven, "
+                            + "and the walls seem to close in slightly. In the distance, you hear a faint sound. It’s a slow, "
+                            + "rhythmic ticking, like the sound of a clock, though no such device is visible.", narationStyle, outputPane);
+                    chapterCompleted = true;
+                } else if (playerInput.equalsIgnoreCase("TURN BACK")) {
+                    displayTextLetterByLetter("\nYou hesitate at the entrance to the corridor, "
+                            + "feeling the weight of the decision to retreat. As you turn around, the dim light from the torch flickers ominously. "
+                            + "The small stone chamber behind you looks unchanged, but a shiver runs down your spine as you sense that the darkness "
+                            + "beyond the door is no longer as inviting as it seemed.\n\nThe iron door creaks softly as you close it behind you, "
+                            + "and you feel an unsettling quiet settle over the room. The rhythmic dripping of water is now the only sound, "
+                            + "echoing off the cold stone walls. It feels as though the dungeon itself is waiting for you to reconsider, "
+                            + "a silent pressure urging you to explore further.", narationStyle, outputPane);
+                    displayTextLetterByLetter("\nCommands:\n   Reopen the door. (", null, outputPane);
+                    displayTextLetterByLetter("REOPEN DOOR", promptStyle, outputPane);
+                    if (checkedRoom) {
+                        displayTextLetterByLetter(")\n   Examine the room again. (", null, outputPane);
+                        displayTextLetterByLetter("REEXAMINE ROOM", promptStyle, outputPane);
+                        displayTextLetterByLetter(")", null, outputPane);
+                    } else if (!checkedRoom) {
+                        displayTextLetterByLetter(")\n   Examine the room. (", null, outputPane);
+                        displayTextLetterByLetter("EXAMINE ROOM", promptStyle, outputPane);
+                        displayTextLetterByLetter(")", null, outputPane);
                     }
-                    break;
-                default:
-                    throw new AssertionError();
-            }
-        } catch (BadLocationException e) {
-            e.printStackTrace();
+                    cameBack = true;
+                    chapterState--;
+                } else {
+                    displayTextLetterByLetter("\nCommands:\n   Follow the Corridor. (", null, outputPane);
+                    displayTextLetterByLetter("FOLLOW CORRIDOR", promptStyle, outputPane);
+                    displayTextLetterByLetter(")\n   Turn back. (", null, outputPane);
+                    displayTextLetterByLetter("TURN BACK", promptStyle, outputPane);
+                    displayTextLetterByLetter(")", null, outputPane);
+                }
+                break;
+            default:
+                throw new AssertionError();
         }
     }
 }

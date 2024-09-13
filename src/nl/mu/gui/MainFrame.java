@@ -31,28 +31,28 @@ public class MainFrame extends javax.swing.JFrame {
 
     private Style userStyle;
     private Style tildeStyle;
-    private final Style errorStyle;
+    private final Style ERRORSTYLE;
     private Player player = new Player();
     private Game game = new Game();
     private Chapter currentChapter;
     private boolean userNamed = false;
     private String lastInput = "";
+    private final String DEFAULTINPUT = "user@GaetansDungeon:~$ ";
 
     /**
      * Creates new form MainFrame
      */
     public MainFrame() {
         initComponents();
-        this.errorStyle = outputPane.addStyle("RED", null);
-        StyleConstants.setForeground(errorStyle, Color.RED);
+        this.ERRORSTYLE = outputPane.addStyle("RED", null);
+        StyleConstants.setForeground(ERRORSTYLE, Color.RED);
         getContentPane().setBackground(Color.BLACK);
-        currentChapter = new ChapterZero();
+        currentChapter = new ChapterZero(outputPane);
 //        player.setName("CrusaderSirDan");
 //        currentChapter=new ChapterTwo(player);
         initGame();
-        initOutputPane();
         initInputPane();
-        currentChapter.play(outputPane, inputPane);
+        currentChapter.play(outputPane);
     }
 
     public void initGame() {
@@ -66,9 +66,9 @@ public class MainFrame extends javax.swing.JFrame {
     public Chapter nextChapter() {
         switch (currentChapter.getChapter()) {
             case 0:
-                return new ChapterOne(player);
+                return new ChapterOne(player, outputPane);
             case 1:
-                return new ChapterTwo(player);
+                return new ChapterTwo(player, outputPane);
             case 2:
 //                return "ChapterThree";
 //            case 3:
@@ -79,26 +79,6 @@ public class MainFrame extends javax.swing.JFrame {
 //                return "ChapterSix";
             default:
                 return null;
-        }
-    }
-
-    public void initOutputPane() {
-        Style bannerStyle = outputPane.addStyle("Yellow", null);
-        StyleConstants.setForeground(bannerStyle, Color.YELLOW);
-        Style byLineStyle = outputPane.addStyle("Silver", null);
-        StyleConstants.setForeground(byLineStyle, new Color(192, 192, 192));
-        StyledDocument outputDoc = outputPane.getStyledDocument();
-        try {
-            outputDoc.insertString(outputDoc.getLength(),
-                    /*--*/ "   ______ ___     ______ ______ ___     _   __ _  _____    ____   __  __ _   __ ______ ______ ____   _   __" + "\n"
-                    /**/ + "  / ____//   |   / ____//_  __//   |   / | / /( )/ ___/   / __ \\ / / / // | / // ____// ____// __ \\ / | / /" + "\n"
-                    /**/ + " / / __ / /| |  / __/    / /  / /| |  /  |/ / |/ \\__ \\   / / / // / / //  |/ // / __ / __/  / / / //  |/ / " + "\n"
-                    /**/ + "/ /_/ // ___ | / /___   / /  / ___ | / /|  /    ___/ /  / /_/ // /_/ // /|  // /_/ // /___ / /_/ // /|  /  " + "\n"
-                    /**/ + "\\____//_/  |_|/_____/  /_/  /_/  |_|/_/ |_/    /____/  /_____/ \\____//_/ |_/ \\____//_____/ \\____//_/ |_/   " + "\n", bannerStyle);
-            outputDoc.insertString(outputDoc.getLength(), "By: Gaëtan Doos\n", byLineStyle);
-
-        } catch (BadLocationException e) {
-            e.printStackTrace();
         }
     }
 
@@ -115,9 +95,9 @@ public class MainFrame extends javax.swing.JFrame {
         StyledDocument inputDoc = inputPane.getStyledDocument();
         try {
             if (player == null || player.getName() == null) {
-                inputDoc.insertString(inputDoc.getLength(), "admin@user", userStyle);
+                inputDoc.insertString(inputDoc.getLength(), "user@GaetansDungeon", userStyle);
             } else {
-                inputDoc.insertString(inputDoc.getLength(), "admin@" + player.getName(), userStyle);
+                inputDoc.insertString(inputDoc.getLength(), player.getName() + "@GaetansDungeon", userStyle);
             }
             inputDoc.insertString(inputDoc.getLength(), ":", null);
             inputDoc.insertString(inputDoc.getLength(), "~", tildeStyle);
@@ -131,9 +111,9 @@ public class MainFrame extends javax.swing.JFrame {
     public String getUserInput() {
         String playerInput;
         if (player == null || player.getName() == null) {
-            playerInput = inputPane.getText().substring(14);
+            playerInput = inputPane.getText().substring(DEFAULTINPUT.length());
         } else {
-            playerInput = inputPane.getText().substring(10 + player.getName().length());
+            playerInput = inputPane.getText().substring(DEFAULTINPUT.length() - 4 + player.getName().length());
         }
         if (playerInput == null) {
             playerInput = "";
@@ -141,7 +121,7 @@ public class MainFrame extends javax.swing.JFrame {
         return playerInput;
     }
 
-    private void handleKeyEvent(KeyEvent evt, JTextPane pane, String nonInput) {
+    private void deletePrevention(KeyEvent evt, JTextPane pane, String nonInput) {
         try {
             int caretPosition = pane.getCaretPosition();
             String currentText = pane.getText();
@@ -161,6 +141,15 @@ public class MainFrame extends javax.swing.JFrame {
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public void clearOutputPane() {
+        StyledDocument document = outputPane.getStyledDocument();
+        try {
+            document.remove(0, document.getLength()); // Removes all the text in the JTextPane
+        } catch (BadLocationException e) {
+            e.printStackTrace(); // Handle exception if it occurs
         }
     }
 
@@ -238,48 +227,52 @@ public class MainFrame extends javax.swing.JFrame {
     private void inputPaneKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inputPaneKeyPressed
         // TODO add your handling code here:
         if (evt.getKeyChar() == KeyEvent.VK_ENTER) {
-            evt.consume();
-            StyledDocument inputDoc = inputPane.getStyledDocument();
-            StyledDocument outputDoc = outputPane.getStyledDocument();
-            String playerInput = getUserInput();
-            lastInput = playerInput;
+            if (currentChapter.isIsDisplaying()) {
+                evt.consume();
+            } else {
+                evt.consume();
+                StyledDocument inputDoc = inputPane.getStyledDocument();
+                StyledDocument outputDoc = outputPane.getStyledDocument();
+                String playerInput = getUserInput();
+                lastInput = playerInput;
 
-            try {
-                //update outputPane
-                int length = inputDoc.getLength();
-                if (player == null || player.getName() == null) {
-                    outputDoc.insertString(outputDoc.getLength(), "\n" + "admin@user", userStyle);
-                } else {
-                    outputDoc.insertString(outputDoc.getLength(), "\n" + "admin@" + player.getName(), userStyle);
-                }
-                outputDoc.insertString(outputDoc.getLength(), ":", null);
-                outputDoc.insertString(outputDoc.getLength(), "~", tildeStyle);
-                outputDoc.insertString(outputDoc.getLength(), "$ ", null);
-                outputDoc.insertString(outputDoc.getLength(), playerInput, null);
+                try {
+                    //update outputPane
+                    int length = inputDoc.getLength();
+                    if (player == null || player.getName() == null) {
+                        outputDoc.insertString(outputDoc.getLength(), "\nuser@GaetansDungeon", userStyle);
+                    } else {
+                        outputDoc.insertString(outputDoc.getLength(), "\n" + player.getName() + "@GaetansDungeon", userStyle);
+                    }
+                    outputDoc.insertString(outputDoc.getLength(), ":", null);
+                    outputDoc.insertString(outputDoc.getLength(), "~", tildeStyle);
+                    outputDoc.insertString(outputDoc.getLength(), "$ ", null);
+                    outputDoc.insertString(outputDoc.getLength(), playerInput, null);
 
-                //check player choice
-                currentChapter.processChoice(playerInput, outputPane);
-                if ((currentChapter instanceof ChapterZero) && currentChapter.getChapterState() == 2) {
-                    player.setName(currentChapter.getPlayer().getName());
+                    //check player choice
+                    currentChapter.processChoice(playerInput, outputPane);
+                    if ((currentChapter instanceof ChapterZero) && currentChapter.getChapterState() == 3) {
+                        player.setName(currentChapter.getPlayer().getName());
+                    }
+                    if (currentChapter.isChapterCompleted()&&!currentChapter.isIsDisplaying()) {
+                        clearOutputPane();
+                        currentChapter = nextChapter();
+                        currentChapter.play(outputPane);
+                    }
+                    inputPane.setText("");
+                } catch (BadLocationException e) {
+                    e.printStackTrace();
                 }
-                if (currentChapter.isChapterCompleted()) {
-                    currentChapter = nextChapter();
-                    currentChapter.play(outputPane, inputPane);
-                }
-
-                inputPane.setText("");
-            } catch (BadLocationException e) {
-                e.printStackTrace();
+                initInputPane();
             }
-            initInputPane();
         } else if (evt.getKeyChar() == KeyEvent.VK_BACK_SPACE || evt.getKeyChar() == KeyEvent.VK_DELETE) {
             String nonInput;
             if (player == null || player.getName() == null) {
-                nonInput = "admin@user:~$ ";
+                nonInput = "user@GaetansDungeon:~$ ";
             } else {
-                nonInput = "admin@" + player.getName() + ":~$ ";
+                nonInput = player.getName() + "@GaetansDungeon" + ":~$ ";
             }
-            handleKeyEvent(evt, inputPane, nonInput);
+            deletePrevention(evt, inputPane, nonInput);
         } else if (evt.getKeyCode() == KeyEvent.VK_UP) {
             StyledDocument inputDoc = inputPane.getStyledDocument();
             try {

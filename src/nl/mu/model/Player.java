@@ -21,13 +21,4 @@ public class Player {
     public void setName(String name) {
         this.name = name;
     }
-    
-    public void askName(JTextPane outputPane) {
-        try {
-            outputPane.getStyledDocument().insertString(outputPane.getStyledDocument().getLength(),
-                    "\nWhat is your name?", null);
-        } catch (BadLocationException e) {
-            e.printStackTrace();
-        }
-    }
 }
