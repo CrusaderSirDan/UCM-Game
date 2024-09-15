@@ -7,20 +7,23 @@ package nl.mu.gui;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.JTextPane;
+import javax.swing.Timer;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 import nl.mu.model.Chapter;
+import nl.mu.model.Chapter.TextToDisplay;
 import nl.mu.model.ChapterOne;
 import nl.mu.model.ChapterTwo;
 import nl.mu.model.ChapterZero;
-import nl.mu.model.Game;
 import nl.mu.model.Player;
 
 /**
@@ -33,11 +36,12 @@ public class MainFrame extends javax.swing.JFrame {
     private Style tildeStyle;
     private final Style ERRORSTYLE;
     private Player player = new Player();
-    private Game game = new Game();
     private Chapter currentChapter;
+    private boolean isDisplaying;
     private boolean userNamed = false;
     private String lastInput = "";
     private final String DEFAULTINPUT = "user@GaetansDungeon:~$ ";
+    protected LinkedList<TextToDisplay> textQueue = new LinkedList<>();
 
     /**
      * Creates new form MainFrame
@@ -49,26 +53,28 @@ public class MainFrame extends javax.swing.JFrame {
         getContentPane().setBackground(Color.BLACK);
         currentChapter = new ChapterZero(outputPane);
 //        player.setName("CrusaderSirDan");
-//        currentChapter=new ChapterTwo(player);
-        initGame();
+//        currentChapter = new ChapterOne(player, outputPane, textQueue, false);
         initInputPane();
         currentChapter.play(outputPane);
-    }
 
-    public void initGame() {
-        try {
-            game.addChoices("ChoicesFile.txt");
-        } catch (IOException ex) {
-            Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        // Timer to check if the chapter is complete
+        Timer timer = new Timer(500, e -> {
+            if (!currentChapter.isDisplaying() && currentChapter.isChapterCompleted()) {
+                currentChapter = nextChapter();
+//                clearOutputPane();
+                currentChapter.play(outputPane);
+            }
+        });
+        timer.start();
     }
 
     public Chapter nextChapter() {
+        isDisplaying = currentChapter.isDisplaying();
         switch (currentChapter.getChapter()) {
             case 0:
-                return new ChapterOne(player, outputPane);
+                return new ChapterOne(player, outputPane, textQueue, isDisplaying);
             case 1:
-                return new ChapterTwo(player, outputPane);
+                return new ChapterTwo(player, outputPane, textQueue, isDisplaying);
             case 2:
 //                return "ChapterThree";
 //            case 3:
@@ -102,7 +108,6 @@ public class MainFrame extends javax.swing.JFrame {
             inputDoc.insertString(inputDoc.getLength(), ":", null);
             inputDoc.insertString(inputDoc.getLength(), "~", tildeStyle);
             inputDoc.insertString(inputDoc.getLength(), "$ ", null);
-
         } catch (BadLocationException e) {
             e.printStackTrace();
         }
@@ -225,17 +230,23 @@ public class MainFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void inputPaneKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inputPaneKeyPressed
-        // TODO add your handling code here:
+        // TODO add your handling code here:        
+        outputPane.setAutoscrolls(true);
         if (evt.getKeyChar() == KeyEvent.VK_ENTER) {
-            if (currentChapter.isIsDisplaying()) {
+            if (currentChapter.isDisplaying() && !currentChapter.isChapterCompleted()) {
                 evt.consume();
+            } else if (currentChapter.isDisplaying() && currentChapter.isChapterCompleted()) {
+                evt.consume();
+                currentChapter.processNextText();
+                currentChapter = nextChapter();
+//                clearOutputPane();
+                currentChapter.play(outputPane);
             } else {
                 evt.consume();
                 StyledDocument inputDoc = inputPane.getStyledDocument();
                 StyledDocument outputDoc = outputPane.getStyledDocument();
                 String playerInput = getUserInput();
                 lastInput = playerInput;
-
                 try {
                     //update outputPane
                     int length = inputDoc.getLength();
@@ -248,29 +259,25 @@ public class MainFrame extends javax.swing.JFrame {
                     outputDoc.insertString(outputDoc.getLength(), "~", tildeStyle);
                     outputDoc.insertString(outputDoc.getLength(), "$ ", null);
                     outputDoc.insertString(outputDoc.getLength(), playerInput, null);
-
                     //check player choice
                     currentChapter.processChoice(playerInput, outputPane);
                     if ((currentChapter instanceof ChapterZero) && currentChapter.getChapterState() == 3) {
                         player.setName(currentChapter.getPlayer().getName());
                     }
-                    if (currentChapter.isChapterCompleted()&&!currentChapter.isIsDisplaying()) {
-                        clearOutputPane();
-                        currentChapter = nextChapter();
-                        currentChapter.play(outputPane);
-                    }
+//                    }
                     inputPane.setText("");
                 } catch (BadLocationException e) {
                     e.printStackTrace();
                 }
                 initInputPane();
             }
-        } else if (evt.getKeyChar() == KeyEvent.VK_BACK_SPACE || evt.getKeyChar() == KeyEvent.VK_DELETE) {
+        }
+        if (evt.getKeyChar() == KeyEvent.VK_BACK_SPACE || evt.getKeyChar() == KeyEvent.VK_DELETE) {
             String nonInput;
             if (player == null || player.getName() == null) {
                 nonInput = "user@GaetansDungeon:~$ ";
             } else {
-                nonInput = player.getName() + "@GaetansDungeon" + ":~$ ";
+                nonInput = player.getName() + "@GaetansDungeon:~$ ";
             }
             deletePrevention(evt, inputPane, nonInput);
         } else if (evt.getKeyCode() == KeyEvent.VK_UP) {
@@ -280,10 +287,8 @@ public class MainFrame extends javax.swing.JFrame {
             } catch (BadLocationException ex) {
                 Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
-
         }
     }//GEN-LAST:event_inputPaneKeyPressed
-
     /**
      * @param args the command line arguments
      */
@@ -318,7 +323,6 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
     }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextPane inputPane;
     private javax.swing.JScrollPane jScrollPane1;

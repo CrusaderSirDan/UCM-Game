@@ -5,6 +5,7 @@
 package nl.mu.model;
 
 import java.awt.Color;
+import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JTextPane;
@@ -19,7 +20,7 @@ import javax.swing.text.StyledDocument;
  */
 public class ChapterOne extends Chapter {
 
-    public ChapterOne(Player player, JTextPane outputPane) {
+    public ChapterOne(Player player, JTextPane outputPane, LinkedList<TextToDisplay> textQueue, boolean isDisplaying) {
         super(/**/"   ______ __                   __                 ___                                   \n"
                 + "  / ____// /_   ____ _ ____   / /_ ___   _____   <  /_                                  \n"
                 + " / /    / __ \\ / __ `// __ \\ / __// _ \\ / ___/   / /(_)                                 \n"
@@ -30,7 +31,8 @@ public class ChapterOne extends Chapter {
                 + "         / /  / __ \\ / _ \\   / /| || | /| / // __ `// //_// _ \\ / __ \\ / // __ \\ / __ `/\n"
                 + "        / /  / / / //  __/  / ___ || |/ |/ // /_/ // ,<  /  __// / / // // / / // /_/ / \n"
                 + "       /_/  /_/ /_/ \\___/  /_/  |_||__/|__/ \\__,_//_/|_| \\___//_/ /_//_//_/ /_/ \\__, /  \n"
-                + "                                                                               /____/   ", 1, player, outputPane);
+                + "                                                                               /____/   ",
+                1, player, outputPane, textQueue, isDisplaying);
     }
 
     public void startChapter(JTextPane outputPane) {
@@ -58,28 +60,28 @@ public class ChapterOne extends Chapter {
         displayTextLetterByLetter("\nDarkness surrounds you. "
                 + "The air is cold, damp, and heavy with the scent of stone and moss. "
                 + "You feel the hard ground beneath you, rough and unforgiving, "
-                + "as if the earth itself rejects your presence.\n", descriptionStyle, outputPane);
-        displayTextLetterByLetter("\nWhere am I?\n", questionsStyle, outputPane);
+                + "as if the earth itself rejects your presence.\n", descriptionStyle, outputPane, false);
+        displayTextLetterByLetter("\nWhere am I?\n", questionsStyle, outputPane, false);
         displayTextLetterByLetter("\nThe thought echoes in your mind as you open your eyes, "
                 + "though the darkness offers no comfort, no answers. "
                 + "A faint dripping sound is the only noise that breaks the silence, "
-                + "a slow rhythmic tap that matches the beating of your heart.\n", narationStyle, outputPane);
+                + "a slow rhythmic tap that matches the beating of your heart.\n", narationStyle, outputPane, false);
         displayTextLetterByLetter("\nYou push yourself upright, your limbs sluggish as if you've been asleep for too long. "
                 + "Blinking into the blackness, your vision slowly adjusts. Dim light flickers from a torch, "
                 + "casting weak shadows on the walls of a narrow stone room. The walls are damp, covered in uneven patches of moss, "
-                + "and the floor is cold beneath your hands\n", narationStyle, outputPane);
-        displayTextLetterByLetter("\nWho am I?\n", questionsStyle, outputPane);
-        displayTextLetterByLetter("\nYour mind is blank. No memories, no identity. Just a sense of loss, of being ", narationStyle, outputPane);
-        displayTextLetterByLetter("stuck", italicNarationStyle, outputPane);
+                + "and the floor is cold beneath your hands\n", narationStyle, outputPane, false);
+        displayTextLetterByLetter("\nWho am I?\n", questionsStyle, outputPane, false);
+        displayTextLetterByLetter("\nYour mind is blank. No memories, no identity. Just a sense of loss, of being ", narationStyle, outputPane, false);
+        displayTextLetterByLetter("stuck", italicNarationStyle, outputPane, false);
         displayTextLetterByLetter(".\n\nA rusty iron door stands before you. It creaks softly, "
                 + "moving slightly as though inviting you to leave, "
                 + "but also warning you that what lies beyond may not be what you hope for. There are no windows, no exits except for the door, "
-                + "and the flickering light grows dimmer with each passing moment.\n", narationStyle, outputPane);
-        displayTextLetterByLetter("\nCommands:\n   Examine the room. (", null, outputPane);
-        displayTextLetterByLetter("EXAMINE ROOM", promptStyle, outputPane);
-        displayTextLetterByLetter(")\n   Open the door. (", null, outputPane);
-        displayTextLetterByLetter("OPEN DOOR", promptStyle, outputPane);
-        displayTextLetterByLetter(")", null, outputPane);
+                + "and the flickering light grows dimmer with each passing moment.\n", narationStyle, outputPane, false);
+        displayTextLetterByLetter("\nCommands:\n   Examine the room. (", null, outputPane, false);
+        displayTextLetterByLetter("EXAMINE ROOM", promptStyle, outputPane, false);
+        displayTextLetterByLetter(")\n   Open the door. (", null, outputPane, false);
+        displayTextLetterByLetter("OPEN DOOR", promptStyle, outputPane, false);
+        displayTextLetterByLetter(")", null, outputPane, false);
         chapterState++;
     }
 
@@ -120,15 +122,15 @@ public class ChapterOne extends Chapter {
                         displayTextLetterByLetter("\nYou glance around the small stone chamber. "
                                 + "The walls are bare, except for the patches of moss that cling to the stone like unwelcome guests. "
                                 + "In the far corner, you notice a small object, half-hidden in shadow. It's a scrap of cloth, torn and dirty, "
-                                + "but there is something strange about it.\n", narationStyle, outputPane);
-                        displayTextLetterByLetter("\nPick up the cloth\n", questionsStyle, outputPane);
+                                + "but there is something strange about it.\n", narationStyle, outputPane, false);
+                        displayTextLetterByLetter("\nPick up the cloth\n", questionsStyle, outputPane, false);
                         displayTextLetterByLetter("\nYou reach down and feel the fabric between your fingers. "
                                 + "It’s rough, but as you hold it up to the light, you see faint, almost invisible markings—symbols, "
                                 + "scribbled hastily. They seem familiar, but you can't place them. "
-                                + "There’s nothing else of note in the room.\n", narationStyle, outputPane);
-                        displayTextLetterByLetter("\nCommands:\n   Open the door. (", null, outputPane);
-                        displayTextLetterByLetter("OPEN DOOR", promptStyle, outputPane);
-                        displayTextLetterByLetter(")", null, outputPane);
+                                + "There’s nothing else of note in the room.\n", narationStyle, outputPane, false);
+                        displayTextLetterByLetter("\nCommands:\n   Open the door. (", null, outputPane, false);
+                        displayTextLetterByLetter("OPEN DOOR", promptStyle, outputPane, false);
+                        displayTextLetterByLetter(")", null, outputPane, false);
                         checkedRoom = true;
                     } else if (playerInput.equalsIgnoreCase("OPEN DOOR")) {
                         displayTextLetterByLetter("\nYou stand before the iron door, its surface pitted with rust and decay. "
@@ -137,25 +139,25 @@ public class ChapterOne extends Chapter {
                                 + "\nYou pull the door open slowly, the hinges groaning in protest. "
                                 + "Beyond the threshold, a long, narrow corridor stretches into the shadows, lit only by the occasional flickering torch. "
                                 + "The walls here are even more worn, as though time itself has been slowly eroding them. "
-                                + "The air feels heavier here.\n", narationStyle, outputPane);
+                                + "The air feels heavier here.\n", narationStyle, outputPane, false);
                         displayTextLetterByLetter("\nAs you step into the corridor, "
-                                + "a voice echoes faintly from deep within the dungeon.\n", boldNarationStyle, outputPane);
-                        displayTextLetterByLetter("\n\"You are not the first...\"\n", dungeonStyle, outputPane);
+                                + "a voice echoes faintly from deep within the dungeon.\n", boldNarationStyle, outputPane, false);
+                        displayTextLetterByLetter("\n\"You are not the first...\"\n", dungeonStyle, outputPane, false);
                         displayTextLetterByLetter("\nIt’s barely a whisper, too faint to be certain if it’s real or just your imagination, "
                                 + "but the words linger in your mind. They leave a sense of urgency, but also a strange comfort, "
-                                + "as if someone, somewhere, knows what you are going through.", narationStyle, outputPane);
-                        displayTextLetterByLetter("\nCommands:\n   Follow the corridor. (", null, outputPane);
-                        displayTextLetterByLetter("FOLLOW CORRIDOR", promptStyle, outputPane);
-                        displayTextLetterByLetter(")\n   Turn back. (", null, outputPane);
-                        displayTextLetterByLetter("TURN BACK", promptStyle, outputPane);
-                        displayTextLetterByLetter(")", null, outputPane);
+                                + "as if someone, somewhere, knows what you are going through.", narationStyle, outputPane, false);
+                        displayTextLetterByLetter("\nCommands:\n   Follow the corridor. (", null, outputPane, false);
+                        displayTextLetterByLetter("FOLLOW CORRIDOR", promptStyle, outputPane, false);
+                        displayTextLetterByLetter(")\n   Turn back. (", null, outputPane, false);
+                        displayTextLetterByLetter("TURN BACK", promptStyle, outputPane, false);
+                        displayTextLetterByLetter(")", null, outputPane, false);
                         chapterState++;
                     } else {
-                        displayTextLetterByLetter("\nCommands:\n   Examine the room. (", null, outputPane);
-                        displayTextLetterByLetter("EXAMINE ROOM", promptStyle, outputPane);
-                        displayTextLetterByLetter(")\n   Open the door. (", null, outputPane);
-                        displayTextLetterByLetter("OPEN DOOR", promptStyle, outputPane);
-                        displayTextLetterByLetter(")", null, outputPane);
+                        displayTextLetterByLetter("\nCommands:\n   Examine the room. (", null, outputPane, false);
+                        displayTextLetterByLetter("EXAMINE ROOM", promptStyle, outputPane, false);
+                        displayTextLetterByLetter(")\n   Open the door. (", null, outputPane, false);
+                        displayTextLetterByLetter("OPEN DOOR", promptStyle, outputPane, false);
+                        displayTextLetterByLetter(")", null, outputPane, false);
                     }
                 } else if (cameBack) {
                     if (!checkedRoom) {
@@ -163,57 +165,57 @@ public class ChapterOne extends Chapter {
                             displayTextLetterByLetter("\nYou glance around the small stone chamber. "
                                     + "The walls are bare, except for the patches of moss that cling to the stone like unwelcome guests. "
                                     + "In the far corner, you notice a small object, half-hidden in shadow. It's a scrap of cloth, torn and dirty, "
-                                    + "but there is something strange about it.\n", narationStyle, outputPane);
-                            displayTextLetterByLetter("\nPick up the cloth\n", questionsStyle, outputPane);
+                                    + "but there is something strange about it.\n", narationStyle, outputPane, false);
+                            displayTextLetterByLetter("\nPick up the cloth\n", questionsStyle, outputPane, false);
                             displayTextLetterByLetter("\nYou reach down and feel the fabric between your fingers. "
                                     + "It’s rough, but as you hold it up to the light, you see faint, almost invisible markings—symbols, "
                                     + "scribbled hastily. They seem familiar, but you can't place them. "
-                                    + "There’s nothing else of note in the room.\n", narationStyle, outputPane);
-                            displayTextLetterByLetter("\nCommands:\n   Reopen the door. (", null, outputPane);
-                            displayTextLetterByLetter("REOPEN DOOR", promptStyle, outputPane);
-                            displayTextLetterByLetter(")", null, outputPane);
+                                    + "There’s nothing else of note in the room.\n", narationStyle, outputPane, false);
+                            displayTextLetterByLetter("\nCommands:\n   Reopen the door. (", null, outputPane, false);
+                            displayTextLetterByLetter("REOPEN DOOR", promptStyle, outputPane, false);
+                            displayTextLetterByLetter(")", null, outputPane, false);
                             checkedRoom = true;
                         } else if (playerInput.equalsIgnoreCase("REOPEN DOOR")) {
                             displayTextLetterByLetter("\nYou carefully open the door once more. "
                                     + "The corridor stretches out before you, just as you left it, "
-                                    + "with the same eerie glow and rhythmic ticking echoing in the distance.", narationStyle, outputPane);
-                            displayTextLetterByLetter("\nCommands:\n   Follow the corridor. (", null, outputPane);
-                            displayTextLetterByLetter("FOLLOW CORRIDOR", promptStyle, outputPane);
-                            displayTextLetterByLetter(")\n   Turn back. (", null, outputPane);
-                            displayTextLetterByLetter("TURN BACK", promptStyle, outputPane);
-                            displayTextLetterByLetter(")", null, outputPane);
+                                    + "with the same eerie glow and rhythmic ticking echoing in the distance.", narationStyle, outputPane, false);
+                            displayTextLetterByLetter("\nCommands:\n   Follow the corridor. (", null, outputPane, false);
+                            displayTextLetterByLetter("FOLLOW CORRIDOR", promptStyle, outputPane, false);
+                            displayTextLetterByLetter(")\n   Turn back. (", null, outputPane, false);
+                            displayTextLetterByLetter("TURN BACK", promptStyle, outputPane, false);
+                            displayTextLetterByLetter(")", null, outputPane, false);
                             chapterState++;
                         } else {
-                            displayTextLetterByLetter("\nCommands:\n   Examine the room. (", null, outputPane);
-                            displayTextLetterByLetter("EXAMINE ROOM", promptStyle, outputPane);
-                            displayTextLetterByLetter(")\n   Reopen the door. (", null, outputPane);
-                            displayTextLetterByLetter("REOPEN DOOR", promptStyle, outputPane);
-                            displayTextLetterByLetter(")", null, outputPane);
+                            displayTextLetterByLetter("\nCommands:\n   Examine the room. (", null, outputPane, false);
+                            displayTextLetterByLetter("EXAMINE ROOM", promptStyle, outputPane, false);
+                            displayTextLetterByLetter(")\n   Reopen the door. (", null, outputPane, false);
+                            displayTextLetterByLetter("REOPEN DOOR", promptStyle, outputPane, false);
+                            displayTextLetterByLetter(")", null, outputPane, false);
                         }
                     } else if (checkedRoom) {
                         if (playerInput.equalsIgnoreCase("REEXAMINE ROOM")) {
                             displayTextLetterByLetter("\nYou take another look around the room. "
                                     + "The stone walls and dim light seem unchanged, but you notice new details or "
-                                    + "subtle differences that might have been missed before.", narationStyle, outputPane);
-                            displayTextLetterByLetter("\nCommands:\n   Reopen the door. (", null, outputPane);
-                            displayTextLetterByLetter("REOPEN DOOR", promptStyle, outputPane);
-                            displayTextLetterByLetter(")", null, outputPane);
+                                    + "subtle differences that might have been missed before.", narationStyle, outputPane, false);
+                            displayTextLetterByLetter("\nCommands:\n   Reopen the door. (", null, outputPane, false);
+                            displayTextLetterByLetter("REOPEN DOOR", promptStyle, outputPane, false);
+                            displayTextLetterByLetter(")", null, outputPane, false);
                         } else if (playerInput.equalsIgnoreCase("REOPEN DOOR")) {
                             displayTextLetterByLetter("\nYou carefully open the door once more. "
                                     + "The corridor stretches out before you, just as you left it, "
-                                    + "with the same eerie glow and rhythmic ticking echoing in the distance.", narationStyle, outputPane);
-                            displayTextLetterByLetter("\nCommands:\n   Follow the corridor. (", null, outputPane);
-                            displayTextLetterByLetter("FOLLOW CORRIDOR", promptStyle, outputPane);
-                            displayTextLetterByLetter(")\n   Turn back. (", null, outputPane);
-                            displayTextLetterByLetter("TURN BACK", promptStyle, outputPane);
-                            displayTextLetterByLetter(")", null, outputPane);
+                                    + "with the same eerie glow and rhythmic ticking echoing in the distance.", narationStyle, outputPane, false);
+                            displayTextLetterByLetter("\nCommands:\n   Follow the corridor. (", null, outputPane, false);
+                            displayTextLetterByLetter("FOLLOW CORRIDOR", promptStyle, outputPane, false);
+                            displayTextLetterByLetter(")\n   Turn back. (", null, outputPane, false);
+                            displayTextLetterByLetter("TURN BACK", promptStyle, outputPane, false);
+                            displayTextLetterByLetter(")", null, outputPane, false);
                             chapterState++;
                         } else {
-                            displayTextLetterByLetter("\nCommands:\n   Reexamine the room. (", null, outputPane);
-                            displayTextLetterByLetter("REEXAMINE ROOM", promptStyle, outputPane);
-                            displayTextLetterByLetter(")\n   Reopen the door. (", null, outputPane);
-                            displayTextLetterByLetter("REOPEN DOOR", promptStyle, outputPane);
-                            displayTextLetterByLetter(")", null, outputPane);
+                            displayTextLetterByLetter("\nCommands:\n   Reexamine the room. (", null, outputPane, false);
+                            displayTextLetterByLetter("REEXAMINE ROOM", promptStyle, outputPane, false);
+                            displayTextLetterByLetter(")\n   Reopen the door. (", null, outputPane, false);
+                            displayTextLetterByLetter("REOPEN DOOR", promptStyle, outputPane, false);
+                            displayTextLetterByLetter(")", null, outputPane, false);
                         }
                     }
                 }
@@ -222,11 +224,14 @@ public class ChapterOne extends Chapter {
                 if (playerInput.equalsIgnoreCase("FOLLOW CORRIDOR")) {
                     displayTextLetterByLetter("\nYou press forward, the light from the torches casting faint shadows"
                             + " along the rough-hewn walls. The sound of your footsteps is swallowed by the silence, "
-                            + "yet the presence of something—or someone—seems to linger just beyond the reach of your senses.\n"
+                            + "yet the presence of something — or someone — seems to linger just beyond the reach of your senses.\n"
                             + "\nAs you move deeper, the corridor begins to shift. The stone beneath your feet feels uneven, "
                             + "and the walls seem to close in slightly. In the distance, you hear a faint sound. It’s a slow, "
-                            + "rhythmic ticking, like the sound of a clock, though no such device is visible.", narationStyle, outputPane);
-                    chapterCompleted = true;
+                            + "rhythmic ticking, like the sound of a clock, though no such device is visible.", narationStyle, outputPane, false);
+                    displayTextLetterByLetter("\n                   You have reached the end of Chapter One. Press ", null, outputPane, false);
+                    displayTextLetterByLetter("ENTER", promptStyle, outputPane, false);
+                    displayTextLetterByLetter(" to start Chapter Two", null, outputPane, false);
+                    chapterState++;
                 } else if (playerInput.equalsIgnoreCase("TURN BACK")) {
                     displayTextLetterByLetter("\nYou hesitate at the entrance to the corridor, "
                             + "feeling the weight of the decision to retreat. As you turn around, the dim light from the torch flickers ominously. "
@@ -234,26 +239,31 @@ public class ChapterOne extends Chapter {
                             + "beyond the door is no longer as inviting as it seemed.\n\nThe iron door creaks softly as you close it behind you, "
                             + "and you feel an unsettling quiet settle over the room. The rhythmic dripping of water is now the only sound, "
                             + "echoing off the cold stone walls. It feels as though the dungeon itself is waiting for you to reconsider, "
-                            + "a silent pressure urging you to explore further.", narationStyle, outputPane);
-                    displayTextLetterByLetter("\nCommands:\n   Reopen the door. (", null, outputPane);
-                    displayTextLetterByLetter("REOPEN DOOR", promptStyle, outputPane);
+                            + "a silent pressure urging you to explore further.", narationStyle, outputPane, false);
+                    displayTextLetterByLetter("\nCommands:\n   Reopen the door. (", null, outputPane, false);
+                    displayTextLetterByLetter("REOPEN DOOR", promptStyle, outputPane, false);
                     if (checkedRoom) {
-                        displayTextLetterByLetter(")\n   Examine the room again. (", null, outputPane);
-                        displayTextLetterByLetter("REEXAMINE ROOM", promptStyle, outputPane);
-                        displayTextLetterByLetter(")", null, outputPane);
+                        displayTextLetterByLetter(")\n   Examine the room again. (", null, outputPane, false);
+                        displayTextLetterByLetter("REEXAMINE ROOM", promptStyle, outputPane, false);
+                        displayTextLetterByLetter(")", null, outputPane, false);
                     } else if (!checkedRoom) {
-                        displayTextLetterByLetter(")\n   Examine the room. (", null, outputPane);
-                        displayTextLetterByLetter("EXAMINE ROOM", promptStyle, outputPane);
-                        displayTextLetterByLetter(")", null, outputPane);
+                        displayTextLetterByLetter(")\n   Examine the room. (", null, outputPane, false);
+                        displayTextLetterByLetter("EXAMINE ROOM", promptStyle, outputPane, false);
+                        displayTextLetterByLetter(")", null, outputPane, false);
                     }
                     cameBack = true;
                     chapterState--;
                 } else {
-                    displayTextLetterByLetter("\nCommands:\n   Follow the Corridor. (", null, outputPane);
-                    displayTextLetterByLetter("FOLLOW CORRIDOR", promptStyle, outputPane);
-                    displayTextLetterByLetter(")\n   Turn back. (", null, outputPane);
-                    displayTextLetterByLetter("TURN BACK", promptStyle, outputPane);
-                    displayTextLetterByLetter(")", null, outputPane);
+                    displayTextLetterByLetter("\nCommands:\n   Follow the Corridor. (", null, outputPane, false);
+                    displayTextLetterByLetter("FOLLOW CORRIDOR", promptStyle, outputPane, false);
+                    displayTextLetterByLetter(")\n   Turn back. (", null, outputPane, false);
+                    displayTextLetterByLetter("TURN BACK", promptStyle, outputPane, false);
+                    displayTextLetterByLetter(")", null, outputPane, false);
+                }
+                break;
+            case 3:
+                if (playerInput != null) {
+                    chapterCompleted = true;
                 }
                 break;
             default:

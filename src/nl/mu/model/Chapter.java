@@ -31,14 +31,21 @@ public abstract class Chapter {
     protected boolean cameBack = false;
     protected boolean checkedRoom = false;
     protected boolean outputPrinted = false;
-    protected Queue<Chapter.TextToDisplay> textQueue = new LinkedList<>(); // Queue to handle sequential text display
-    protected boolean isDisplaying = false;
+    protected LinkedList<Chapter.TextToDisplay> textQueue; // Queue to handle sequential text display
+    protected boolean isDisplaying;
     private final String BYLINE = "By: Gaëtan D. E. A. Doos\n";
 
-    public Chapter(String chapterTitle, int chapter, Player player, JTextPane outputPane) {
+    public LinkedList<TextToDisplay> getTextQueue() {
+        return textQueue;
+    }
+
+    public Chapter(String chapterTitle, int chapter, Player player, JTextPane outputPane, LinkedList<Chapter.TextToDisplay> textQueue, boolean isDisplaying) {
         this.chapterTitle = chapterTitle;
         this.chapter = chapter;
         this.player = player;
+        this.textQueue = new LinkedList<>();
+        this.textQueue.addAll(textQueue);
+        this.isDisplaying = isDisplaying;
         startChapter(outputPane);
     }
 
@@ -51,17 +58,17 @@ public abstract class Chapter {
             StyleConstants.setForeground(bannerStyle, Color.YELLOW);
             Style byLineStyle = outputPane.addStyle("Silver", null);
             StyleConstants.setForeground(byLineStyle, new Color(192, 192, 192));
-            displayBannerLineByLine("\n" + chapterTitle + "\n", bannerStyle, outputPane);
-            displayTextLetterByLetter(BYLINE, byLineStyle, outputPane);
+            displayTextLetterByLetter(chapterTitle + "\n", bannerStyle, outputPane, true);
+            displayTextLetterByLetter(BYLINE, byLineStyle, outputPane, false);
         } else {
             StyledDocument outputDoc = outputPane.getStyledDocument();
             Style bannerStyle = outputPane.addStyle("Yellow", null);
             StyleConstants.setForeground(bannerStyle, Color.YELLOW);
-            displayBannerLineByLine("\n" + chapterTitle + "\n", bannerStyle, outputPane);
+            displayTextLetterByLetter("\n" + chapterTitle + "\n", bannerStyle, outputPane, true);
         }
     }
 
-    public boolean isIsDisplaying() {
+    public boolean isDisplaying() {
         return isDisplaying;
     }
 
@@ -90,23 +97,21 @@ public abstract class Chapter {
     }
 
     // Method to display text letter by letter with a delay
-    protected void displayTextLetterByLetter(String text, Style style, JTextPane outputPane) {
-        textQueue.add(new TextToDisplay(text, style, outputPane, false)); // Queue the text to be displayed
+    public void displayTextLetterByLetter(String text, Style style, JTextPane outputPane, boolean isBanner) {
+        textQueue.add(new TextToDisplay(text, style, outputPane, isBanner)); // Queue the text to be displayed
         processNextText(); // Start processing if not already displaying
     }
 
-    // Method to display banner char by char with a delay
-    protected void displayBannerLineByLine(String banner, Style style, JTextPane outputPane) {
-        textQueue.add(new TextToDisplay(banner, style, outputPane, true)); // Queue the text to be displayed
-        processNextText(); // Start processing if not already displaying
-    }
-
+//    // Method to display banner char by char with a delay
+//    public void displayBannerLineByLine(String banner, Style style, JTextPane outputPane) {
+//        textQueue.add(new TextToDisplay(banner, style, outputPane, true)); // Queue the text to be displayed
+//        processNextText(); // Start processing if not already displaying
+//    }
     // Helper method to process the next text in the queue
-    private void processNextText() {
+    public void processNextText() {
         if (isDisplaying || textQueue.isEmpty()) {
             return; // Don't process if something is already being displayed
         }
-
         TextToDisplay nextText = textQueue.poll();
         if (nextText != null && !nextText.isBanner) {
             StyledDocument outputDoc = nextText.outputPane.getStyledDocument();
@@ -168,7 +173,7 @@ public abstract class Chapter {
     }
 
     // Helper class to store text to display and its style
-    private static class TextToDisplay {
+    public static class TextToDisplay {
 
         String text;
         Style style;
