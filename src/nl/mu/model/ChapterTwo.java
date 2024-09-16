@@ -36,7 +36,7 @@ public class ChapterTwo extends Chapter {
 
     @Override
     public void startChapter(JTextPane outputPane) {
-        super.displayTitle(outputPane);
+        displayTitle(outputPane);
     }
 
     @Override
@@ -83,7 +83,14 @@ public class ChapterTwo extends Chapter {
                     displayTextLetterByLetter(")", null, outputPane, false);
                     chapterState++;
                 } else if (playerInput.equalsIgnoreCase("LEFT")) {
-                    
+                    displayTextLetterByLetter("You choose the path leading deeper into the darkness. The air feels colder, "
+                            + "and the shadows grow thicker. After a short distance, you find a door with a complex lock mechanism. "
+                            + "It seems to require a specific sequence or combination to open.", narationStyle, outputPane, false);
+                    displayTextLetterByLetter("\nCommands:\n   Examine the lock mechanism. (", null, outputPane, false);
+                    displayTextLetterByLetter("EXAMINE LOCK", promptStyle, outputPane, false);
+                    displayTextLetterByLetter(")\n   Return to the junction. (", null, outputPane, false);
+                    displayTextLetterByLetter("TURN BACK", promptStyle, outputPane, false);
+                    displayTextLetterByLetter(")", null, outputPane, false);
                     chapterState++;
                 } else {
                     displayTextLetterByLetter("\nCommands:\n   Take the right path. (", null, outputPane, false);
@@ -94,12 +101,30 @@ public class ChapterTwo extends Chapter {
                 }
                 break;
             case 2:
-                if (playerInput.equalsIgnoreCase("RIGHT")) {
-
-                } else if (playerInput.equalsIgnoreCase("LEFT")) {
+                if (playerInput.equalsIgnoreCase("EXAMINE BOOK")) {
+                    displayTextLetterByLetter("The book is bound in old, cracked leather, and the pages are yellowed with age. "
+                            + "As you open it, you see that the pages are filled with more of the mysterious symbols, "
+                            + "along with faded illustrations of the dungeon. One illustration shows a figure in a dark room, "
+                            + "watching over what appears to be a time loop.", narationStyle, outputPane, false);
+                    displayTextLetterByLetter("\nCommands:\n   Take the book. (", null, outputPane, false);
+                    displayTextLetterByLetter("TAKE BOOK", promptStyle, outputPane, false);
+                    displayTextLetterByLetter(")\n   Leave the book. (", null, outputPane, false);
+                    displayTextLetterByLetter("LEAVE BOOK", promptStyle, outputPane, false);
+                    displayTextLetterByLetter(")", null, outputPane, false);
+                } else if (playerInput.equalsIgnoreCase("CONTINUE")) {
 
                 } else if (playerInput.equalsIgnoreCase("TURN BACK")) {
-
+                    
+                } else if (playerInput.equalsIgnoreCase("EXAMINE LOCK")) {
+                    displayTextLetterByLetter("The lock mechanism is a intricate puzzle with several rotating dials and symbols. "
+                            + "It looks like it might be related to the symbols you saw earlier. There’s a small inscription next to it, "
+                            + "barely readable but suggesting that the correct sequence is tied to understanding the dungeon's history.", 
+                            narationStyle, outputPane, false);
+                    displayTextLetterByLetter("\nCommands:\n   Attempt to solve the puzzle. (", null, outputPane, false);
+                    displayTextLetterByLetter("SOLVE PUZZLE", promptStyle, outputPane, false);
+                    displayTextLetterByLetter(")\n   Return to the junction. (", null, outputPane, false);
+                    displayTextLetterByLetter("TURN BACK", promptStyle, outputPane, false);
+                    displayTextLetterByLetter(")", null, outputPane, false);
                 }
                 break;
             default:

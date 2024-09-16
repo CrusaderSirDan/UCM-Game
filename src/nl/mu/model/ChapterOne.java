@@ -36,7 +36,7 @@ public class ChapterOne extends Chapter {
     }
 
     public void startChapter(JTextPane outputPane) {
-        super.displayTitle(outputPane);
+        displayTitle(outputPane);
     }
 
     @Override

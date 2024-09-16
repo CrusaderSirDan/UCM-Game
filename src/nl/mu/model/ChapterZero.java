@@ -130,7 +130,7 @@ public class ChapterZero extends Chapter {
 
     @Override
     public void startChapter(JTextPane outputPane) {
-        super.displayTitle(outputPane);
+        displayTitle(outputPane);
     }
 
     @Override
