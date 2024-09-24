@@ -20,18 +20,21 @@ import javax.swing.text.StyledDocument;
  */
 public class ChapterOne extends Chapter {
 
+    protected boolean checkedRoom = false;
+
     public ChapterOne(Player player, JTextPane outputPane, LinkedList<TextToDisplay> textQueue, boolean isDisplaying) {
-        super(/**/"   ______ __                   __                 ___                                   \n"
-                + "  / ____// /_   ____ _ ____   / /_ ___   _____   <  /_                                  \n"
-                + " / /    / __ \\ / __ `// __ \\ / __// _ \\ / ___/   / /(_)                                 \n"
-                + "/ /___ / / / // /_/ // /_/ // /_ /  __// /      / /_                                    \n"
-                + "\\____//_/ /_/ \\__,_// .___/ \\__/ \\___//_/      /_/(_)                                   \n"
-                + "         ______ __ /_/         ___                    __                 _              \n"
-                + "        /_  __// /_   ___     /   | _      __ ____ _ / /__ ___   ____   (_)____   ____ _\n"
-                + "         / /  / __ \\ / _ \\   / /| || | /| / // __ `// //_// _ \\ / __ \\ / // __ \\ / __ `/\n"
-                + "        / /  / / / //  __/  / ___ || |/ |/ // /_/ // ,<  /  __// / / // // / / // /_/ / \n"
-                + "       /_/  /_/ /_/ \\___/  /_/  |_||__/|__/ \\__,_//_/|_| \\___//_/ /_//_//_/ /_/ \\__, /  \n"
-                + "                                                                               /____/   ",
+        super("""
+                   ______ __                   __                 ___                                   
+                  / ____// /_   ____ _ ____   / /_ ___   _____   <  /_                                  
+                 / /    / __ \\ / __ `// __ \\ / __// _ \\ / ___/   / /(_)                                 
+                / /___ / / / // /_/ // /_/ // /_ /  __// /      / /_                                    
+                \\____//_/ /_/ \\__,_// .___/ \\__/ \\___//_/      /_/(_)                                   
+                         ______ __ /_/         ___                    __                 _              
+                        /_  __// /_   ___     /   | _      __ ____ _ / /__ ___   ____   (_)____   ____ _
+                         / /  / __ \\ / _ \\   / /| || | /| / // __ `// //_// _ \\ / __ \\ / // __ \\ / __ `/
+                        / /  / / / //  __/  / ___ || |/ |/ // /_/ // ,<  /  __// / / // // / / // /_/ / 
+                       /_/  /_/ /_/ \\___/  /_/  |_||__/|__/ \\__,_//_/|_| \\___//_/ /_//_//_/ /_/ \\__, /  
+                                                                                               /____/   """,
                 1, player, outputPane, textQueue, isDisplaying);
     }
 
@@ -119,18 +122,7 @@ public class ChapterOne extends Chapter {
             case 1:
                 if (!cameBack) {
                     if (playerInput.equalsIgnoreCase("EXAMINE ROOM")) {
-                        displayTextLetterByLetter("\nYou glance around the small stone chamber. "
-                                + "The walls are bare, except for the patches of moss that cling to the stone like unwelcome guests. "
-                                + "In the far corner, you notice a small object, half-hidden in shadow. It's a scrap of cloth, torn and dirty, "
-                                + "but there is something strange about it.\n", narationStyle, outputPane, false);
-                        displayTextLetterByLetter("\nPick up the cloth\n", questionsStyle, outputPane, false);
-                        displayTextLetterByLetter("\nYou reach down and feel the fabric between your fingers. "
-                                + "It’s rough, but as you hold it up to the light, you see faint, almost invisible markings—symbols, "
-                                + "scribbled hastily. They seem familiar, but you can't place them. "
-                                + "There’s nothing else of note in the room.\n", narationStyle, outputPane, false);
-                        displayTextLetterByLetter("\nCommands:\n   Open the door. (", null, outputPane, false);
-                        displayTextLetterByLetter("OPEN DOOR", promptStyle, outputPane, false);
-                        displayTextLetterByLetter(")", null, outputPane, false);
+                        examineRoom(playerInput, outputPane);
                         checkedRoom = true;
                     } else if (playerInput.equalsIgnoreCase("OPEN DOOR")) {
                         displayTextLetterByLetter("\nYou stand before the iron door, its surface pitted with rust and decay. "
@@ -162,18 +154,7 @@ public class ChapterOne extends Chapter {
                 } else if (cameBack) {
                     if (!checkedRoom) {
                         if (playerInput.equalsIgnoreCase("EXAMINE ROOM")) {
-                            displayTextLetterByLetter("\nYou glance around the small stone chamber. "
-                                    + "The walls are bare, except for the patches of moss that cling to the stone like unwelcome guests. "
-                                    + "In the far corner, you notice a small object, half-hidden in shadow. It's a scrap of cloth, torn and dirty, "
-                                    + "but there is something strange about it.\n", narationStyle, outputPane, false);
-                            displayTextLetterByLetter("\nPick up the cloth\n", questionsStyle, outputPane, false);
-                            displayTextLetterByLetter("\nYou reach down and feel the fabric between your fingers. "
-                                    + "It’s rough, but as you hold it up to the light, you see faint, almost invisible markings—symbols, "
-                                    + "scribbled hastily. They seem familiar, but you can't place them. "
-                                    + "There’s nothing else of note in the room.\n", narationStyle, outputPane, false);
-                            displayTextLetterByLetter("\nCommands:\n   Reopen the door. (", null, outputPane, false);
-                            displayTextLetterByLetter("REOPEN DOOR", promptStyle, outputPane, false);
-                            displayTextLetterByLetter(")", null, outputPane, false);
+                            examineRoom(playerInput, outputPane);
                             checkedRoom = true;
                         } else if (playerInput.equalsIgnoreCase("REOPEN DOOR")) {
                             displayTextLetterByLetter("\nYou carefully open the door once more. "
@@ -269,5 +250,27 @@ public class ChapterOne extends Chapter {
             default:
                 throw new AssertionError();
         }
+    }
+
+    public void examineRoom(String playerInput, JTextPane outputPane) {
+        Style questionsStyle = outputPane.addStyle("Questions", null);
+        StyleConstants.setForeground(questionsStyle, new Color(44, 117, 255));
+        StyleConstants.setBold(questionsStyle, true);
+        Style narationStyle = outputPane.addStyle("NarationStyle", null);
+        StyleConstants.setForeground(narationStyle, new Color(47, 79, 79));
+        Style promptStyle = outputPane.addStyle("prompt", null);
+        StyleConstants.setForeground(promptStyle, Color.YELLOW);
+        displayTextLetterByLetter("\nYou glance around the small stone chamber. "
+                + "The walls are bare, except for the patches of moss that cling to the stone like unwelcome guests. "
+                + "In the far corner, you notice a small object, half-hidden in shadow. It's a scrap of cloth, torn and dirty, "
+                + "but there is something strange about it.\n", narationStyle, outputPane, false);
+        displayTextLetterByLetter("\nPick up the cloth\n", questionsStyle, outputPane, false);
+        displayTextLetterByLetter("\nYou reach down and feel the fabric between your fingers. "
+                + "It’s rough, but as you hold it up to the light, you see faint, almost invisible markings—symbols, "
+                + "scribbled hastily. They seem familiar, but you can't place them. "
+                + "There’s nothing else of note in the room.\n", narationStyle, outputPane, false);
+        displayTextLetterByLetter("\nCommands:\n   Open the door. (", null, outputPane, false);
+        displayTextLetterByLetter("OPEN DOOR", promptStyle, outputPane, false);
+        displayTextLetterByLetter(")", null, outputPane, false);
     }
 }

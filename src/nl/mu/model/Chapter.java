@@ -8,8 +8,6 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.LinkedList;
-import java.util.Queue;
-import javax.swing.JTextArea;
 import javax.swing.JTextPane;
 import javax.swing.Timer;
 import javax.swing.text.BadLocationException;
@@ -29,7 +27,6 @@ public abstract class Chapter {
     protected Player player;
     protected boolean chapterCompleted = false;
     protected boolean cameBack = false;
-    protected boolean checkedRoom = false;
     protected boolean outputPrinted = false;
     protected LinkedList<Chapter.TextToDisplay> textQueue; // Queue to handle sequential text display
     protected boolean isDisplaying;

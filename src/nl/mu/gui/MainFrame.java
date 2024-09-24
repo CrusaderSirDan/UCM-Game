@@ -6,9 +6,7 @@ package nl.mu.gui;
 
 import java.awt.Color;
 import java.awt.event.KeyEvent;
-import java.io.IOException;
 import java.util.LinkedList;
-import java.util.Queue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -22,6 +20,7 @@ import javax.swing.text.StyledDocument;
 import nl.mu.model.Chapter;
 import nl.mu.model.Chapter.TextToDisplay;
 import nl.mu.model.ChapterOne;
+import nl.mu.model.ChapterThree;
 import nl.mu.model.ChapterTwo;
 import nl.mu.model.ChapterZero;
 import nl.mu.model.Player;
@@ -76,7 +75,7 @@ public class MainFrame extends javax.swing.JFrame {
             case 1:
                 return new ChapterTwo(player, outputPane, textQueue, isDisplaying);
             case 2:
-//                return "ChapterThree";
+                return new ChapterThree(player, outputPane, textQueue, isDisplaying);
 //            case 3:
 //                return "ChapterFour";
 //            case 4:
@@ -84,7 +83,7 @@ public class MainFrame extends javax.swing.JFrame {
 //            case 5:
 //                return "ChapterSix";
             default:
-                return null;
+                throw new AssertionError();
         }
     }
 
@@ -214,13 +213,13 @@ public class MainFrame extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jScrollPane4)
-            .addComponent(jScrollPane1)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 931, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 636, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 636, Short.MAX_VALUE)
+                .addGap(0, 0, 0)
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -228,46 +227,56 @@ public class MainFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void inputPaneKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inputPaneKeyPressed
-        // TODO add your handling code here:        
+        // TODO add your handling code here:
+        outputPane.setAutoscrolls(false);
         outputPane.setAutoscrolls(true);
         if (evt.getKeyChar() == KeyEvent.VK_ENTER) {
             if (currentChapter.isDisplaying() && !currentChapter.isChapterCompleted()) {
                 evt.consume();
-            } else if (currentChapter.isDisplaying() && currentChapter.isChapterCompleted()) {
+            } else if (currentChapter.isChapterCompleted() && !(currentChapter instanceof ChapterZero)) {
                 evt.consume();
                 currentChapter.processNextText();
                 currentChapter = nextChapter();
 //                clearOutputPane();
                 currentChapter.play(outputPane);
+            } else if (currentChapter.isChapterCompleted()) {
+                evt.consume();
+                currentChapter = nextChapter();
+//                clearOutputPane();
+                currentChapter.play(outputPane);
             } else {
                 evt.consume();
-                StyledDocument inputDoc = inputPane.getStyledDocument();
                 StyledDocument outputDoc = outputPane.getStyledDocument();
                 String playerInput = getUserInput();
                 lastInput = playerInput;
-                try {
-                    //update outputPane
-                    int length = inputDoc.getLength();
-                    if (player == null || player.getName() == null) {
-                        outputDoc.insertString(outputDoc.getLength(), "\nuser@GaetansDungeon", userStyle);
-                    } else {
-                        outputDoc.insertString(outputDoc.getLength(), "\n" + player.getName() + "@GaetansDungeon", userStyle);
+                if (playerInput.length() > 50) {
+                    try {
+                        outputDoc.insertString(outputDoc.getLength(), "\nThe input is too long", ERRORSTYLE);
+                    } catch (BadLocationException ex) {
+                        Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    outputDoc.insertString(outputDoc.getLength(), ":", null);
-                    outputDoc.insertString(outputDoc.getLength(), "~", tildeStyle);
-                    outputDoc.insertString(outputDoc.getLength(), "$ ", null);
-                    outputDoc.insertString(outputDoc.getLength(), playerInput, null);
-                    //check player choice
-                    currentChapter.processChoice(playerInput, outputPane);
-                    if ((currentChapter instanceof ChapterZero) && currentChapter.getChapterState() == 3) {
-                        player.setName(currentChapter.getPlayer().getName());
+                } else {
+                    try {
+                        //update outputPane
+                        if (player == null || player.getName() == null) {
+                            outputDoc.insertString(outputDoc.getLength(), "\nuser@GaetansDungeon", userStyle);
+                        } else {
+                            outputDoc.insertString(outputDoc.getLength(), "\n" + player.getName() + "@GaetansDungeon", userStyle);
+                        }
+                        outputDoc.insertString(outputDoc.getLength(), ":", null);
+                        outputDoc.insertString(outputDoc.getLength(), "~", tildeStyle);
+                        outputDoc.insertString(outputDoc.getLength(), "$ ", null);
+                        outputDoc.insertString(outputDoc.getLength(), playerInput, null);
+                        //check player choice
+                        currentChapter.processChoice(playerInput, outputPane);
+                        if ((currentChapter instanceof ChapterZero) && currentChapter.getChapterState() == 3) {
+                            player.setName(currentChapter.getPlayer().getName());
+                        }
+                        inputPane.setText("");
+                    } catch (BadLocationException e) {
                     }
-//                    }
-                    inputPane.setText("");
-                } catch (BadLocationException e) {
-                    e.printStackTrace();
+                    initInputPane();
                 }
-                initInputPane();
             }
         }
         if (evt.getKeyChar() == KeyEvent.VK_BACK_SPACE || evt.getKeyChar() == KeyEvent.VK_DELETE) {

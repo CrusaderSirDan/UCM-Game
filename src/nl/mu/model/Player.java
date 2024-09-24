@@ -4,9 +4,6 @@
  */
 package nl.mu.model;
 
-import javax.swing.JTextPane;
-import javax.swing.text.BadLocationException;
-
 /**
  *
  * @author Doos
