@@ -88,7 +88,7 @@ public class ChapterTwo extends Chapter {
                     displayTextLetterByLetter(")", null, outputPane, false);
                     chapterState++;
                 } else if (playerInput.equalsIgnoreCase("LEFT")) {
-                    displayTextLetterByLetter("You choose the path leading deeper into the darkness. The air feels colder, "
+                    displayTextLetterByLetter("\nYou choose the path leading deeper into the darkness. The air feels colder, "
                             + "and the shadows grow thicker. After a short distance, you find a door with a complex lock mechanism. "
                             + "The mechanism to open the lock seems completely unfamiliar and alien to you.", narationStyle, outputPane, false);
                     displayTextLetterByLetter("\nCommands:\n   Examine the lock mechanism. (", null, outputPane, false);

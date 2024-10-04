@@ -184,4 +184,13 @@ public abstract class Chapter {
             this.isBanner = isBanner;
         }
     }
+
+    public void clearOutputPane(JTextPane outputPane) {
+        StyledDocument document = outputPane.getStyledDocument();
+        try {
+            document.remove(0, document.getLength()); // Removes all the text in the JTextPane
+        } catch (BadLocationException e) {
+            e.printStackTrace(); // Handle exception if it occurs
+        }
+    }
 }

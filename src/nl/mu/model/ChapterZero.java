@@ -88,6 +88,7 @@ public class ChapterZero extends Chapter {
                 break;
             case 3:
                 if (playerInput.equalsIgnoreCase("START")) {
+                    clearOutputPane(outputPane);
                     chapterCompleted = true;
                 } else {
                     displayTextLetterByLetter("\nHello ", null, outputPane, false);

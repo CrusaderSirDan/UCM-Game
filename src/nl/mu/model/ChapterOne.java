@@ -60,19 +60,15 @@ public class ChapterOne extends Chapter {
         Style promptStyle = outputPane.addStyle("prompt", null);
         StyleConstants.setForeground(promptStyle, Color.YELLOW);
         //START CHAPTER
-        displayTextLetterByLetter("\nDarkness surrounds you. "
-                + "The air is cold, damp, and heavy with the scent of stone and moss. "
-                + "You feel the hard ground beneath you, rough and unforgiving, "
-                + "as if the earth itself rejects your presence.\n", descriptionStyle, outputPane, false);
+        displayTextLetterByLetter("\nDarkness surrounds you. The air is cold, damp, and heavy with the scent of stone and moss,"
+                + " as if the very dungeon breathes. You feel the rough ground beneath you—cold, jagged, unforgiving. A distant,"
+                + " faint dripping sound echoes through the chamber, like a clock counting the seconds you've been here.\n", descriptionStyle, outputPane, false);
         displayTextLetterByLetter("\nWhere am I?\n", questionsStyle, outputPane, false);
-        displayTextLetterByLetter("\nThe thought echoes in your mind as you open your eyes, "
-                + "though the darkness offers no comfort, no answers. "
-                + "A faint dripping sound is the only noise that breaks the silence, "
-                + "a slow rhythmic tap that matches the beating of your heart.\n", narationStyle, outputPane, false);
-        displayTextLetterByLetter("\nYou push yourself upright, your limbs sluggish as if you've been asleep for too long. "
-                + "Blinking into the blackness, your vision slowly adjusts. Dim light flickers from a torch, "
-                + "casting weak shadows on the walls of a narrow stone room. The walls are damp, covered in uneven patches of moss, "
-                + "and the floor is cold beneath your hands\n", narationStyle, outputPane, false);
+        displayTextLetterByLetter("\nThe thought echoes in your mind like a plea for understanding,"
+                + " but the silence offers no answers. You blink, your eyes heavy and stinging, as you try to adjust to the darkness."
+                + " Faint shadows dance in the weak light of a flickering torch, casting twisted figures along the stone walls."
+                + " The walls, slick with moisture, seem to close in around you, suffocating in their silence.\n", narationStyle, outputPane, false);
+        displayTextLetterByLetter("\nYou push yourself upright, your limbs sluggish as if you've been asleep for too long.\n", narationStyle, outputPane, false);
         displayTextLetterByLetter("\nWho am I?\n", questionsStyle, outputPane, false);
         displayTextLetterByLetter("\nYour mind is blank. No memories, no identity. Just a sense of loss, of being ", narationStyle, outputPane, false);
         displayTextLetterByLetter("stuck", italicNarationStyle, outputPane, false);

@@ -147,15 +147,6 @@ public class MainFrame extends javax.swing.JFrame {
         }
     }
 
-    public void clearOutputPane() {
-        StyledDocument document = outputPane.getStyledDocument();
-        try {
-            document.remove(0, document.getLength()); // Removes all the text in the JTextPane
-        } catch (BadLocationException e) {
-            e.printStackTrace(); // Handle exception if it occurs
-        }
-    }
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -186,13 +177,11 @@ public class MainFrame extends javax.swing.JFrame {
         jScrollPane1.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
         jScrollPane1.setAutoscrolls(true);
 
-        outputPane.setEditable(false);
         outputPane.setBackground(new java.awt.Color(0, 0, 0));
         outputPane.setFont(new java.awt.Font("Courier New", 0, 14)); // NOI18N
         outputPane.setForeground(new java.awt.Color(255, 255, 255));
         outputPane.setToolTipText("");
         outputPane.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        outputPane.setRequestFocusEnabled(false);
         jScrollPane1.setViewportView(outputPane);
 
         jScrollPane4.setBorder(null);
@@ -212,7 +201,9 @@ public class MainFrame extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jScrollPane4)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 931, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
